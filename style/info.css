@@ -1,0 +1,87 @@
+body {
+    width: 100%;
+    height: 100%;
+    margin: 0px;
+    padding: 0px;
+    display: flex;
+}
+
+#left {
+    width: 50%;
+    height: 100%;
+}
+
+#top-bar {
+    width: 100%;
+    align-items: center;
+    display: flex;
+
+    /* change the height to whatever you want */
+    height: 80px;
+    /* also, you should be good to change the background color and the bottom border color */
+    border-bottom: 1px solid #808080;
+    /* background-color: white?; */
+}
+
+#logo {
+    width: 240px; 
+    height: 60px;
+    margin: 0px 20px;
+    cursor: pointer;
+}
+
+/* Note to Jamie: these are the vertical lines between the logo and "groups", and "groups" and resume/contact */
+#top-spacer {
+    height: 40px; 
+    border-left: 1px solid #808080;
+}
+
+#project-title {
+    flex-grow: 1;
+    text-align: center;
+
+}
+
+#left-body {
+    width: 100%;
+    height: calc(100% - 81px);
+}
+
+#right {
+    width: 50%;
+    height: 100%;
+    display: flex;
+
+    border-left: 1px solid #808080;
+}
+
+#right-drag {
+    width: 30px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    cursor: pointer;
+
+    transition: background-color .1s ease;
+}
+
+#right-drag:hover {
+    background-color: #f0f0f0;
+}
+
+#right-body {
+    width: calc(100% - 30px);
+    height: 100%;
+    overflow-y: scroll;
+}
+
+#re-open-description {
+    margin: 0px 20px;
+    cursor: pointer;
+    
+    opacity: 0;
+    display: none;
+}

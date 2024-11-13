@@ -1,0 +1,157 @@
+/* Note to Jamie: shouldn't need to change anything here */
+body {
+    margin: 0px;
+    padding: 0px;
+    width: 100%;
+    height: 100%;
+}
+
+/* Note to Jamie: shouldn't need to change anything here */
+#holder-3d {
+    width: 100%;
+    height: calc(100%);
+    
+    margin: 0px;
+    padding: 0px;
+    position: relative;
+}
+
+/* Note to Jamie: shouldn't need to change anything here */
+#three-canvas {
+    z-index: 1;
+    height: calc(100% - 80px);
+    position: absolute;
+    width: 100%;
+    top: 80px;
+}
+
+/* Note to Jamie: This is the top bar :) */
+#top-bar {
+    /* these you will probably not need to change */
+    position: absolute;
+    width: 100%;
+    align-items: center;
+    display: flex;
+
+    /* change the height to whatever you want */
+    height: 80px;
+    /* also, you should be good to change the background color and the bottom border color */
+    border-bottom: 1px solid #808080;
+    /* background-color: white?; */
+}
+
+/* Note to Jamie: this is for your logo on the top left. */
+#logo {
+    width: 240px; 
+    height: 60px;
+}
+
+/* Note to Jamie: these are the vertical lines between the logo and "groups", and "groups" and resume/contact */
+#top-spacer {
+    height: 40px; 
+    border-left: 1px solid #808080;
+}
+
+/* Note to Jamie: these are the resume / contact buttons */
+#top-button {
+    width: 120px; font-size: 14px; text-align: center; cursor: pointer;
+}
+
+/* Note to Jamie: this is the element containing the "group" labels,
+ * be careful modifying it because the width is set by JavaScript */
+#projects-holder {
+    display: flex;
+}
+
+/* Note to Jamie: this is the style for each "group" of projects.
+ * You can change the width here, but you may also have to update 
+ * something in the JavaScript.
+ */
+.project {
+    width: 120px;
+    padding: 10px 0px;
+    text-align: center;
+    cursor: pointer;
+
+    font-size: 14px;
+}
+
+/* Note to Jamie: this is the style for the dropdown menu for selecting "groups". */
+.dropdown {
+    /* You probably won't need to change these */
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    opacity: 0;
+
+    /* these are good to change */
+    border: 1px solid #808080;
+    border-top: 0px;
+    background-color: white;
+    border-bottom-right-radius: 5px;
+    border-bottom-left-radius: 5px;
+    width: 120px;
+
+    z-index: 10;
+
+    /* this is for the transition on hover, you can change the duration & type */
+    transition: opacity .1s ease;
+}
+
+/* Note to Jamie: this is just an extre CSS selector for projects in the dropdown, 
+ * in case you want to style them slightly differently or something. */
+.dropdown > .project {
+    /* background-color: red?; */
+}
+
+/* Note to Jamie: this is the style for the label which appears when you
+ * hover over an object.
+ */
+#three-label {
+    /* You should probably not need to change these */
+    position: absolute;
+    left: calc(50%);
+    transform: translateX(-50%);
+    text-align: center;
+    opacity: 0;
+    z-index: 10;
+    pointer-events: none;
+    
+    /* If you change the height of the top bar, you'll want to change this too */
+    top: 80px;
+    
+    border-bottom: 1px solid #808080;
+    padding: 7px 20px;
+    font-size: 16px;
+
+    /* this is for the transition on hover, you can change the duration & type */
+    transition: opacity .1s linear;
+}
+
+/* Note to Jamie: this is the style for the github / linkedin / etc. icon holder */
+#contact-icons {
+    position: absolute;
+    top: 81px;
+    right: 0px;
+    z-index: 5;
+    
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    background-color: white;
+
+    border-bottom-left-radius: 5px;
+    border-left: 1px solid #808080;
+    border-bottom: 1px solid #808080;
+}
+
+
+/* Note to Jamie: and this is the style for the actual icons. */
+.feather {
+    width: 30px;
+    height: 30px;
+    stroke: #808080;
+    stroke-width: 1.5px;
+    margin: 15px;
+}
