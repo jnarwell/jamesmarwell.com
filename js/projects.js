@@ -55,6 +55,50 @@ export function getProjectList() {
                 scale: {
                     x: .005, y: .005, z: .005
                 }
+            },
+            {
+                title: "giraffe_guitar",
+                id: "giraffe_guitar",
+                group: "personal",
+                modelURL: "/projects/giraffe_guitar/giraffe_guitar.glb",
+                descriptionURL: "/projects/cube_001/desc.html",
+                imagesURL: "/projects/cube_001/images.html",
+                scale: {
+                    x: .05, y: .05, z: .05
+                }
+            },
+            {
+                title: "nanofab_washer",
+                id: "nanofab_washer",
+                group: "personal",
+                modelURL: "/projects/nanofab_washer/nanofab_washer.glb",
+                descriptionURL: "/projects/cube_001/desc.html",
+                imagesURL: "/projects/cube_001/images.html",
+                scale: {
+                    x: .05, y: .05, z: .05
+                }
+            },
+            {
+                title: "school_bench",
+                id: "school_bench",
+                group: "personal",
+                modelURL: "/projects/school_bench/school_bench.glb",
+                descriptionURL: "/projects/cube_001/desc.html",
+                imagesURL: "/projects/cube_001/images.html",
+                scale: {
+                    x: .15, y: .15, z: .15
+                }
+            },
+            {
+                title: "flightclub_grip",
+                id: "flightclub_grip",
+                group: "personal",
+                modelURL: "/projects/flightclub_grip/flightclub_grip.glb",
+                descriptionURL: "/projects/cube_001/desc.html",
+                imagesURL: "/projects/cube_001/images.html",
+                scale: {
+                    x: .15, y: .15, z: .15
+                }
             }
         ],
         groups: [
