@@ -37,8 +37,19 @@ export function getProjectList() {
             {
                 title: "sardine_tin",
                 id: "sardine_tin",
-                group: "classwork",
+                group: "personal",
                 modelURL: "/projects/sardine_tin/sardine_tin.glb",
+                descriptionURL: "/projects/cube_001/desc.html",
+                imagesURL: "/projects/cube_001/images.html",
+                scale: {
+                    x: .1, y: .1, z: .1
+                }
+            },
+            {
+                title: "abstract_pendant",
+                id: "abstract_pendant",
+                group: "personal",
+                modelURL: "/projects/abstract_pendant/abstract_pendant.glb",
                 descriptionURL: "/projects/cube_001/desc.html",
                 imagesURL: "/projects/cube_001/images.html",
                 scale: {
