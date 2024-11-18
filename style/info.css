@@ -88,3 +88,8 @@ body {
     opacity: 0;
     display: none;
 }
+#desc{
+    padding-right: 10px;
+    text-align: justify;
+    font-size: 1.7vw;
+}

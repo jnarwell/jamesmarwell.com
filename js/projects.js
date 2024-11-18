@@ -28,8 +28,8 @@ export function getProjectList() {
                 id: "cereal_container",
                 group: "classwork",
                 modelURL: "/projects/cereal_container/cereal_container.glb",
-                descriptionURL: "/projects/cube_001/desc.html",
-                imagesURL: "/projects/cube_001/images.html",
+                descriptionURL: "/projects/cereal_container/desc.html",
+                imagesURL: "/projects/cereal_container/images.html",
                 scale: {
                     x: .005, y: .005, z: .005
                 }
