@@ -487,6 +487,8 @@ window.onload = async () => {
         }
     }
 
+    console.log(objects)
+
     const res = createRenderer(objects)
 
     let selected = null
