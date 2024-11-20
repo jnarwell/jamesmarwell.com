@@ -135,18 +135,18 @@ body {
 #contact-icons {
     position: absolute;
     top: 81px;
-    right: 0px;
+    right: 10px;
     z-index: 5;
     
     display: flex;
     flex-direction: column;
     align-items: center;
 
-    background-color: white;
+    background: rgba(0,0,0,0.0);
 
     border-bottom-left-radius: 5px;
-    border-left: 1px solid #808080;
-    border-bottom: 1px solid #808080;
+    border-left: rgba(0,0,0,0.0);
+    border-bottom: rgba(0,0,0,0.0);
 }
 
 
@@ -154,7 +154,7 @@ body {
 .feather {
     width: 30px;
     height: 30px;
-    stroke: #808080;
+    stroke: #474747;
     stroke-width: 1.5px;
     margin: 15px;
 }

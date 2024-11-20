@@ -108,7 +108,7 @@ export function getProjectList() {
                 descriptionURL: "/projects/hvcb/desc.html",
                 imagesURL: "/projects/hvcb/images.html",
                 scale: {
-                    x: .003, y: .003, z: .003
+                    x: .3, y: .3, z: .3
                 }
             }
         ],
