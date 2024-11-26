@@ -8,7 +8,7 @@ import * as THREE from "three"
 
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js"
-*/
+*/  
 
 window.onload = async () => {
     if (!window.location) {err(); return}
@@ -21,6 +21,10 @@ window.onload = async () => {
     const description = getProjectDescriptionById(projectName)
 
     if (!description) {err(); return}
+
+    document.querySelector("#project-title").textContent = description.title
+
+    console.log(description)
 
     {// load in right content panel
         await fetch(description.descriptionURL).then(response => response.text()).then(
@@ -184,9 +188,9 @@ async function createRenderer(description) {
         returned.three.scene.add(loadedMesh)
 
         if ("scale" in description) {
-            loadedMesh.scale.x = description.scale.x
-            loadedMesh.scale.y = description.scale.y
-            loadedMesh.scale.z = description.scale.z
+            loadedMesh.scale.x = description.scale.x * 3
+            loadedMesh.scale.y = description.scale.y * 3
+            loadedMesh.scale.z = description.scale.z * 3
         }
     }
 

@@ -4,6 +4,9 @@ body {
     margin: 0px;
     padding: 0px;
     display: flex;
+
+    background-image: url('./background_texture_info.jpg');
+    background-size: cover;
 }
 
 #left {
@@ -84,4 +87,9 @@ body {
     
     opacity: 0;
     display: none;
+}
+#desc{
+    padding-right: 10px;
+    text-align: justify;
+    font-size: 1.7vw;
 }

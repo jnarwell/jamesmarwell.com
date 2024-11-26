@@ -3,6 +3,7 @@ import { GLTFLoader } from "https://cdn.skypack.dev/three@0.132.2/examples/jsm/l
 
 import { getProjectList } from "/js/projects.js"
 
+
 function createRenderer(objects) {
     const returned = { state: { mouse: { }, cursor: { }, selection: { } }, }
 
@@ -140,8 +141,10 @@ function createRenderer(objects) {
     // add all meshes to the scene
     for (var x = 0; x < objects.length; x++) {
         objects[x].threeMesh.name = "" + x
+
         returned.three.scene.add(objects[x].threeMesh)
     }
+    
 
     // the functionality for arranging the objects on the screen
     let objectsInView = []
@@ -483,6 +486,8 @@ window.onload = async () => {
             objects[objects.length - 1].targetScale = {x: 1, y: 1, z: 1}
         }
     }
+
+    console.log(objects)
 
     const res = createRenderer(objects)
 

@@ -1,0 +1,1 @@
+nanofab_washer.glb filter=lfs diff=lfs merge=lfs -text
