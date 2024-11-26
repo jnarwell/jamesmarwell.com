@@ -38,11 +38,11 @@ export function getProjectList() {
                 title: "sardine_tin",
                 id: "sardine_tin",
                 group: "classwork",
-                modelURL: "/projects/sardine_tin/sardine_tin.glb",
+                modelURL: "/projects/sardine_tin/sardine_tin_new.glb",
                 descriptionURL: "/projects/cube_001/desc.html",
                 imagesURL: "/projects/cube_001/images.html",
                 scale: {
-                    x: .005, y: .005, z: .005
+                    x: .2, y: .2, z: .2
                 }
             }
         ],
