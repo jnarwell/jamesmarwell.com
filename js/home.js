@@ -3,8 +3,9 @@ import { GLTFLoader } from "https://cdn.skypack.dev/three@0.132.2/examples/jsm/l
 
 import { getProjectList } from "/js/projects.js"
 
+let glbLoader = null
 
-function createRenderer(objects) {
+async function createRenderer(objects) {
     const returned = { state: { mouse: { }, cursor: { }, selection: { } }, }
 
     // for handling the display of particular groups of objects
@@ -13,7 +14,7 @@ function createRenderer(objects) {
     // create root element containing threeJS viewer
     returned.elem = document.createElement("div")
     new ResizeObserver(onResize).observe(returned.elem) 
-    function onResize() {
+    async function onResize() {
         if (!returned.three) return
 
         const w = returned.elem.clientWidth
@@ -24,9 +25,9 @@ function createRenderer(objects) {
         returned.three.renderer.setSize(w, h)
 
         if (currentGroup == null) {
-            putInViewObjectsRandom()
+            await putInViewObjectsRandom()
         } else {
-            putInViewObjectsLine()
+            await putInViewObjectsLine()
         }
     }
     
@@ -136,15 +137,7 @@ function createRenderer(objects) {
     }
 
     // add threeJS element to root element
-    returned.elem.appendChild( returned.three.renderer.domElement )
-
-    // add all meshes to the scene
-    for (var x = 0; x < objects.length; x++) {
-        objects[x].threeMesh.name = "" + x
-
-        returned.three.scene.add(objects[x].threeMesh)
-    }
-    
+    returned.elem.appendChild( returned.three.renderer.domElement )    
 
     // the functionality for arranging the objects on the screen
     let objectsInView = []
@@ -160,7 +153,7 @@ function createRenderer(objects) {
         }
     }
 
-    function selectGroup(id) {
+    async function selectGroup(id) {
         currentGroup = id
         objectsInView = []
         for (var x = 0; x < objects.length; x++) {
@@ -169,24 +162,56 @@ function createRenderer(objects) {
             }
         }
 
-        putInViewObjectsLine()
+        await putInViewObjectsLine()
         shuffleObjectsInView()
     }
 
-    function deSelectGroup() {
+    async function ensureLoadObject(id) {
+        if (objects[id].threeMesh != null) {
+            console.log("skipping", id)
+            return
+        }
+        const loadedScene = await glbLoader.loadAsync(objects[id].modelURL)
+        const loadedMesh = loadedScene.scenes[0].children[0]
+        objects[id].threeMesh = loadedMesh
+
+        
+
+        console.log("loading ", id)
+
+        if ("scale" in objects[id].project) {
+            loadedMesh.scale.x = objects[id].project.scale.x
+            loadedMesh.scale.y = objects[id].project.scale.y
+            loadedMesh.scale.z = objects[id].project.scale.z
+
+            objects[id].targetScale = {...loadedMesh.scale}
+        } else {
+            objects[id].targetScale = {x: 1, y: 1, z: 1}
+        }
+
+        objects[id].threeMesh.name = "" + id
+        returned.three.scene.add(objects[id].threeMesh)
+    }
+
+    window.THREE = returned.three
+
+    function isLoaded(id) {
+        return objects[id].threeMesh != null
+    }
+
+    async function deSelectGroup() {
         currentGroup = null
         objectsInView = []
         for (var x = 0; x < objects.length; x++) {
             objectsInView.push(x)
         }
 
-        putInViewObjectsRandom()
         shuffleObjectsInView()
+        await putInViewObjectsRandom()
     }
 
-    deSelectGroup()
+    async function putInViewObjectsRandom() {
 
-    function putInViewObjectsRandom() {
         const MAX_Y_DIST = 2
         const MAX_X_DIST = .65 * MAX_Y_DIST * returned.elem.clientWidth / returned.elem.clientHeight
         const NUM_COL = Math.floor(MAX_X_DIST)
@@ -213,6 +238,7 @@ function createRenderer(objects) {
         for (var y = -1; y <= 1; y++) {
             let idx = count++
             if (idx < objectsInView.length) {
+                await ensureLoadObject(objectsInView[idx])
                 objects[objectsInView[idx]].threeMesh.position.x = 0 + randOff()
                 objects[objectsInView[idx]].threeMesh.position.y = y * 1.75 + randOff()
                 objects[objectsInView[idx]].threeMesh.position.z = 0 + randOff()
@@ -226,6 +252,7 @@ function createRenderer(objects) {
             for (var y = -1; y <= 1; y++) {
                 let idx = count++
                 if (idx < objectsInView.length) {
+                    await ensureLoadObject(objectsInView[idx])
                     objects[objectsInView[idx]].threeMesh.position.x = x * -2 + randOff()
                     objects[objectsInView[idx]].threeMesh.position.y = y * 1.75 + randOff()
                     objects[objectsInView[idx]].threeMesh.position.z = 0 + randOff()
@@ -237,6 +264,7 @@ function createRenderer(objects) {
             for (var y = -1; y <= 1; y++) {
                 let idx = count++
                 if (idx < objectsInView.length) {
+                    await ensureLoadObject(objectsInView[idx])
                     objects[objectsInView[idx]].threeMesh.position.x = x * 2 + randOff()
                     objects[objectsInView[idx]].threeMesh.position.y = y * 1.75 + randOff()
                     objects[objectsInView[idx]].threeMesh.position.z = 0 + randOff()
@@ -253,12 +281,12 @@ function createRenderer(objects) {
                 }
                 return false
             }))(x)) {
-                objects[x].threeMesh.position.z = 10
+                if (isLoaded(x)) objects[x].threeMesh.position.z = 10
             }
         }
     }
 
-    function putInViewObjectsLine() {
+    async function putInViewObjectsLine() {
         const MAX_Y_DIST = 2
         const MAX_X_DIST = .65 * MAX_Y_DIST * returned.elem.clientWidth / returned.elem.clientHeight
         const NUM_COL = Math.floor(MAX_X_DIST)
@@ -270,6 +298,7 @@ function createRenderer(objects) {
 
         for (var x = 0; x < NUM_TOTAL; x++) {
             let idx = count++
+            await ensureLoadObject(objectsInView[idx])
             objects[objectsInView[idx]].threeMesh.position.x = x * 2 + OFFSET
             objects[objectsInView[idx]].threeMesh.position.y = 0
             objects[objectsInView[idx]].threeMesh.position.z = 0
@@ -288,7 +317,7 @@ function createRenderer(objects) {
                 }
                 return false
             }))(x)) {
-                objects[x].threeMesh.position.z = 10
+                if (isLoaded(x)) objects[x].threeMesh.position.z = 10
             }
         }
     }
@@ -463,33 +492,26 @@ window.onload = async () => {
 
     initTopBar(groups, selectCallBack)
 
-    const glbLoader = new GLTFLoader()
+    glbLoader = new GLTFLoader()
 
     for (var x = 0; x < projectInfo.projects.length; x++) {
         const project = projectInfo.projects[x]
-        const loadedScene = await glbLoader.loadAsync(project.modelURL)
-        const loadedMesh = loadedScene.scenes[0].children[0]
         objects.push({
-            threeMesh: loadedMesh,
+            modelURL: project.modelURL,
+            project: project,
+            threeMesh: null,
             name: project.title,
             url: `/info.html?project=${project.id}`,
             group: project.group
         })
-
-        if ("scale" in project) {
-            loadedMesh.scale.x = project.scale.x
-            loadedMesh.scale.y = project.scale.y
-            loadedMesh.scale.z = project.scale.z
-
-            objects[objects.length - 1].targetScale = {...loadedMesh.scale}
-        } else {
-            objects[objects.length - 1].targetScale = {x: 1, y: 1, z: 1}
-        }
     }
 
-    console.log(objects)
+    const res = await createRenderer(objects)
 
-    const res = createRenderer(objects)
+    // I don't know why this is necessary but it is
+    setTimeout(async () => {
+        await res.deSelectGroup()
+    }, 10)
 
     let selected = null
     function selectCallBack(id) {
