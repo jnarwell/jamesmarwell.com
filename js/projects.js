@@ -1,3 +1,10 @@
+export function randomPlacementType() {
+    // return "grid"
+    // return "random"
+    // return "random_spaced"
+    return "random_spaced"
+}
+
 export function getProjectList() {
     return {
         projects: [

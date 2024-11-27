@@ -1,7 +1,7 @@
 import * as THREE from "https://cdn.skypack.dev/three@0.132.2"
 import { GLTFLoader } from "https://cdn.skypack.dev/three@0.132.2/examples/jsm/loaders/GLTFLoader"
 
-import { getProjectList } from "/js/projects.js"
+import { getProjectList, randomPlacementType } from "/js/projects.js"
 
 let glbLoader = null
 
@@ -210,8 +210,77 @@ async function createRenderer(objects) {
         await putInViewObjectsRandom()
     }
 
-    // new code
     async function putInViewObjectsRandom() {
+        switch (randomPlacementType()) {
+            case "grid":
+                await putInViewObjectsRandom_Grid()
+                break
+            case "random":
+                await putInViewObjectsRandom_Random()
+                break
+            case "random_spaced":
+                await putInViewObjectsRandom_Random_Spaced()
+                break
+        }
+    }
+
+    // new code
+    async function putInViewObjectsRandom_Random_Spaced() {
+        const MAX_Y_DIST = 2
+        const MAX_X_DIST = .9 * MAX_Y_DIST * returned.elem.clientWidth / returned.elem.clientHeight
+
+        let failureCount = 0
+        let addedCount = 0
+        while (failureCount < 10 && addedCount < objectsInView.length) {
+
+            let posX = 0
+            let posY = 0
+            let maxMinDist = 0
+            for (var x = 0; x < 30; x++) {
+                let randomX = (Math.random() - .5) * 2. * MAX_X_DIST
+                let randomY = (Math.random() - .5) * 2. * MAX_Y_DIST
+                let minDist = 1e30
+                for (var y = 0; y < addedCount; y++) {
+                    let checkingPosition = objects[objectsInView[y]].threeMesh.position
+                    let dist = Math.sqrt((checkingPosition.x - randomX) * (checkingPosition.x - randomX) + (checkingPosition.y - randomY) * (checkingPosition.y - randomY))
+                    minDist = Math.min(dist, minDist)
+                }
+                if (minDist < 1.7) continue
+                if (minDist > maxMinDist) {
+                    posX = randomX
+                    posY = randomY
+                    maxMinDist = minDist
+                }
+            }
+
+            if (maxMinDist == 0) {
+                failureCount++
+                continue
+            }
+
+            let idx = addedCount++
+
+            await ensureLoadObject(objectsInView[idx])
+            objects[objectsInView[idx]].threeMesh.position.x = posX 
+            objects[objectsInView[idx]].threeMesh.position.y = posY
+            objects[objectsInView[idx]].threeMesh.position.z = 0
+        }
+
+        for (var x = 0; x < objects.length; x++) {
+            if (!(((id) => {
+                for (var j = 0; j < addedCount; j++) {
+                    if (objectsInView[j] === id) return true
+                }
+                return false
+            }))(x)) {
+                if (isLoaded(x)) objects[x].threeMesh.position.z = 10
+            }
+        }
+
+        return
+    }
+    
+    async function putInViewObjectsRandom_Random() {
         const MAX_Y_DIST = 2
         const MAX_X_DIST = .9 * MAX_Y_DIST * returned.elem.clientWidth / returned.elem.clientHeight
 
@@ -259,8 +328,7 @@ async function createRenderer(objects) {
         return
     }
 
-    /* Old code
-    async function putInViewObjectsRandom() {
+    async function putInViewObjectsRandom_Grid() {
 
         const MAX_Y_DIST = 2
         const MAX_X_DIST = .65 * MAX_Y_DIST * returned.elem.clientWidth / returned.elem.clientHeight
@@ -335,7 +403,6 @@ async function createRenderer(objects) {
             }
         }
     }
-    */
 
     async function putInViewObjectsLine() {
         const MAX_Y_DIST = 2
