@@ -210,6 +210,56 @@ async function createRenderer(objects) {
         await putInViewObjectsRandom()
     }
 
+    // new code
+    async function putInViewObjectsRandom() {
+        const MAX_Y_DIST = 2
+        const MAX_X_DIST = .9 * MAX_Y_DIST * returned.elem.clientWidth / returned.elem.clientHeight
+
+        let failureCount = 0
+        let addedCount = 0
+        while (failureCount < 1000 && addedCount < objectsInView.length) {
+            let randomX = (Math.random() - .5) * 2. * MAX_X_DIST
+            let randomY = (Math.random() - .5) * 2. * MAX_Y_DIST
+
+            let bCollides = false
+
+            for (var x = 0; x < addedCount; x++) {
+                let checkingPosition = objects[objectsInView[x]].threeMesh.position
+
+                if (Math.abs(checkingPosition.x - randomX) < 1.5 && Math.abs(checkingPosition.y - randomY) < 1.5) {
+                    bCollides = true 
+                    break
+                }
+            }
+
+            if (bCollides) {
+                failureCount++
+                continue
+            }
+
+            let idx = addedCount++
+
+            await ensureLoadObject(objectsInView[idx])
+            objects[objectsInView[idx]].threeMesh.position.x = randomX 
+            objects[objectsInView[idx]].threeMesh.position.y = randomY
+            objects[objectsInView[idx]].threeMesh.position.z = 0
+        }
+
+        for (var x = 0; x < objects.length; x++) {
+            if (!(((id) => {
+                for (var j = 0; j < addedCount; j++) {
+                    if (objectsInView[j] === id) return true
+                }
+                return false
+            }))(x)) {
+                if (isLoaded(x)) objects[x].threeMesh.position.z = 10
+            }
+        }
+
+        return
+    }
+
+    /* Old code
     async function putInViewObjectsRandom() {
 
         const MAX_Y_DIST = 2
@@ -285,6 +335,7 @@ async function createRenderer(objects) {
             }
         }
     }
+    */
 
     async function putInViewObjectsLine() {
         const MAX_Y_DIST = 2
