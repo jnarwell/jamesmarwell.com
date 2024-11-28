@@ -629,7 +629,7 @@ window.onload = async () => {
     // I don't know why this is necessary but it is
     setTimeout(async () => {
         await res.deSelectGroup()
-    }, 10)
+    }, 50)
 
     let selected = null
     function selectCallBack(id) {
