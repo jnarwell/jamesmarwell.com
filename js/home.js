@@ -166,18 +166,20 @@ async function createRenderer(objects) {
         shuffleObjectsInView()
     }
 
+    let loaded = []
+
+    for (var x = 0; x < objects.length; x++) {
+        loaded[x] = false
+    }
+
     async function ensureLoadObject(id) {
-        if (objects[id].threeMesh != null) {
-            console.log("skipping", id)
+        if (loaded[id]) {
             return
         }
+        loaded[id] = true
         const loadedScene = await glbLoader.loadAsync(objects[id].modelURL)
         const loadedMesh = loadedScene.scenes[0].children[0]
         objects[id].threeMesh = loadedMesh
-
-        
-
-        console.log("loading ", id)
 
         if ("scale" in objects[id].project) {
             loadedMesh.scale.x = objects[id].project.scale.x
@@ -261,6 +263,8 @@ async function createRenderer(objects) {
             let idx = addedCount++
 
             await ensureLoadObject(objectsInView[idx])
+
+
             objects[objectsInView[idx]].threeMesh.position.x = posX 
             objects[objectsInView[idx]].threeMesh.position.y = posY
             objects[objectsInView[idx]].threeMesh.position.z = 0
