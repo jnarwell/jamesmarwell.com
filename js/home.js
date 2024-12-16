@@ -115,6 +115,15 @@ async function createRenderer(objects) {
         }
     }
 
+    // initialize the logo
+
+    document.querySelector("#logo").onclick = () => {
+        const a = document.createElement("a")
+        a.href = "/"
+        document.body.appendChild(a)
+        a.click()
+    }
+
     // initiate threeJS
     returned.three = { }
     returned.three.scene = new THREE.Scene()

@@ -77,7 +77,7 @@ export function getProjectList() {
             {
                 title: "nanofab_washer",
                 id: "nanofab_washer",
-                group: "proffesional",
+                group: "professional",
                 modelURL: "/projects/nanofab_washer/nanofab_washer.glb",
                 descriptionURL: "/projects/nanofab_washer/desc.html",
                 imagesURL: "/projects/nanofab_washer/images.html",
@@ -110,7 +110,7 @@ export function getProjectList() {
             {
                 title: "hvcb",
                 id: "flightchvcblub_grip",
-                group: "proffesional",
+                group: "professional",
                 modelURL: "/projects/hvcb/hvcb.glb",
                 descriptionURL: "/projects/hvcb/desc.html",
                 imagesURL: "/projects/hvcb/images.html",
@@ -127,7 +127,7 @@ export function getProjectList() {
                 name: "classwork", id: "classwork"
             },
             {
-                name: "proffesional", id: "proffesional"
+                name: "professional", id: "professional"
             },
             
         ]

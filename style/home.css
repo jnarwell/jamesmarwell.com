@@ -57,7 +57,7 @@ body {
 
 /* Note to Jamie: these are the resume / contact buttons */
 #top-button {
-    width: 120px; font-size: 14px; text-align: center; cursor: pointer;
+    width: 120px; font-size: 18px; text-align: center; cursor: pointer;
 }
 
 /* Note to Jamie: this is the element containing the "group" labels,
@@ -76,7 +76,7 @@ body {
     text-align: center;
     cursor: pointer;
 
-    font-size: 14px;
+    font-size: 18px;
 }
 
 /* Note to Jamie: this is the style for the dropdown menu for selecting "groups". */
@@ -157,4 +157,9 @@ body {
     stroke: #474747;
     stroke-width: 1.5px;
     margin: 15px;
+}
+
+a {
+    text-decoration: none;
+    color: black;
 }
