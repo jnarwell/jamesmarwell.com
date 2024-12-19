@@ -121,13 +121,16 @@ export function getProjectList() {
         ],
         groups: [
             {
-                name: "personal", id: "personal"
+                name: "personal", id: "personal",
+                preferredOrder: ["wallE", "sardine_tin"]
             },
             {
-                name: "classwork", id: "classwork"
+                name: "classwork", id: "classwork",
+                preferredOrder: []
             },
             {
-                name: "professional", id: "professional"
+                name: "professional", id: "professional",
+                preferredOrder: []
             },
             
         ]
