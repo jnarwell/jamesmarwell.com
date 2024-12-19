@@ -170,7 +170,6 @@ async function createRenderer(objects, groups) {
         let potentiallyAdded = []
         for (var x = 0; x < objects.length; x++) {
             if (objects[x].group === id) {
-                console.log(objects[x])
                 potentiallyAdded.push(objects[x].project.id)
             }
         }
