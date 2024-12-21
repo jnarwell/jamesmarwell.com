@@ -132,7 +132,6 @@ export function getProjectList() {
                 name: "professional", id: "professional",
                 preferredOrder: []
             },
-            
         ]
     }
 }
