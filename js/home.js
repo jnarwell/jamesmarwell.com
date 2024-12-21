@@ -5,7 +5,7 @@ import { getProjectList, randomPlacementType } from "/js/projects.js"
 
 let glbLoader = null
 
-async function createRenderer(objects, groups) {
+async function createRenderer(objects, groups, globalPreferredOrder) {
     const returned = { state: { mouse: { }, cursor: { }, selection: { } }, }
 
     // for handling the display of particular groups of objects
@@ -275,17 +275,76 @@ async function createRenderer(objects, groups) {
     }
 
     async function deSelectGroup() {
-        currentGroup = null
-        objectsInView = []
-        for (var x = 0; x < objects.length; x++) {
-            objectsInView.push(x)
-        }
-
-        shuffleObjectsInView()
         await putInViewObjectsRandom()
     }
 
     async function putInViewObjectsRandom() {
+
+        objectsInView = []
+        let potentiallyAdded = []
+        for (var x = 0; x < objects.length; x++) {
+            potentiallyAdded.push(objects[x].project.id)
+        }
+
+        let preferredOrder = globalPreferredOrder
+
+        let objectsToAdd = []
+
+        if (preferredOrder != null) {
+            for (var x = 0; x < preferredOrder.length; x++) {
+                if (arrContains(potentiallyAdded, preferredOrder[x])) {
+                    objectsToAdd.push(preferredOrder[x])
+                }
+            }
+        }
+
+        let remainingObjects = []
+        for (var x = 0; x < potentiallyAdded.length; x++) {
+            if (!arrContains(objectsToAdd, potentiallyAdded[x])) {
+                remainingObjects.push(potentiallyAdded[x])
+            }
+        }
+
+        // shuffle the array
+        for (var x = 0; x < remainingObjects.length; x++) {
+            let i0 = Math.floor(Math.random() * remainingObjects.length)
+            let i1 = Math.floor(Math.random() * remainingObjects.length)
+
+            let t = remainingObjects[i0]
+            remainingObjects[i0] = remainingObjects[i1]
+            remainingObjects[i1] = t
+        }
+
+        function arrContains(arr, id) {
+            for (var x = 0; x < arr.length; x++) {
+                if (arr[x] === id) return true
+            }
+            return false
+        }
+
+        for (var y = 0; y < remainingObjects.length; y++) {
+            objectsToAdd.push(remainingObjects[y])
+        }
+
+        for (var x = 0; x < objectsToAdd.length; x++) {
+            let id = objectsToAdd[x]
+
+            let idx = null
+
+            for (var y = 0; y < objects.length; y++) {
+                if (objects[y].project.id === id) {
+                    idx = y
+                    break
+                }
+            }
+
+            if (idx == null) {
+                console.error("uh oh")
+            }
+
+            objectsInView.push(idx)
+        }
+
         switch (randomPlacementType()) {
             case "grid":
                 await putInViewObjectsRandom_Grid()
@@ -701,7 +760,7 @@ window.onload = async () => {
         })
     }
 
-    const res = await createRenderer(objects, groups)
+    const res = await createRenderer(objects, groups, projectInfo.preferredOrder)
 
     // I don't know why this is necessary but it is
     setTimeout(async () => {

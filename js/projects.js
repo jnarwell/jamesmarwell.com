@@ -2,7 +2,7 @@ export function randomPlacementType() {
     // return "grid"
     // return "random"
     // return "random_spaced"
-    return "grid"
+    return "random_spaced"
 }
 
 export function getProjectList() {
@@ -132,6 +132,9 @@ export function getProjectList() {
                 name: "professional", id: "professional",
                 preferredOrder: []
             },
+        ],
+        preferredOrder: [
+            "wallE", "flightchvcblub_grip"
         ]
     }
 }
