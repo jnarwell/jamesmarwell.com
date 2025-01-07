@@ -109,7 +109,7 @@ export function getProjectList() {
             },
             {
                 title: "hvcb",
-                id: "flightchvcblub_grip",
+                id: "hvcb",
                 group: "professional",
                 modelURL: "/projects/hvcb/hvcb.glb",
                 descriptionURL: "/projects/hvcb/desc.html",
