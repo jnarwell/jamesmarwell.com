@@ -468,7 +468,19 @@ async function createRenderer(objects, groups, globalPreferredOrder) {
 
         const MAX_Y_DIST = 2
         const MAX_X_DIST = .65 * MAX_Y_DIST * returned.elem.clientWidth / returned.elem.clientHeight
-        const NUM_COL = Math.floor(MAX_X_DIST)
+        const NUM_COL = Math.min(
+            Math.floor(MAX_X_DIST),
+            Math.ceil((objectsInView.length - 3) / 6)
+        )
+
+        console.log(
+            objectsInView, objects
+        )
+
+        console.log(
+            Math.floor(MAX_X_DIST),
+            Math.ceil((objectsInView.length - 3) / 6)
+        )
 
         function randOff() {
             return (Math.random() - .5) * .3
@@ -484,12 +496,26 @@ async function createRenderer(objects, groups, globalPreferredOrder) {
             objects[index].threeMesh.scale.x = objects[index].targetScale.x * r
             objects[index].threeMesh.scale.y = objects[index].targetScale.y * r
             objects[index].threeMesh.scale.z = objects[index].targetScale.z * r
-
         }
 
         let count = 0
+
+        for (var x = NUM_COL; x >= -NUM_COL; x--) {
+            for (var y = 1; y >= -1; y--) {
+                if (count < objectsInView.length) {
+                    let idx = count++
+                    await ensureLoadObject(objectsInView[idx])
+                    objects[objectsInView[idx]].threeMesh.position.x = x * -2 + randOff()
+                    objects[objectsInView[idx]].threeMesh.position.y = y * 1.75 + randOff()
+                    objects[objectsInView[idx]].threeMesh.position.z = 0 + randOff()
+                    randomRotation(objects[objectsInView[idx]].threeMesh)
+                    randomScaling(objectsInView[idx])
+                }
+            }
+        }
+
         // first, we should be able to fill the middle
-        for (var y = -1; y <= 1; y++) {
+        /*for (var y = -1; y <= 1; y++) {
             let idx = count++
             if (idx < objectsInView.length) {
                 await ensureLoadObject(objectsInView[idx])
@@ -526,7 +552,7 @@ async function createRenderer(objects, groups, globalPreferredOrder) {
                     randomScaling(objectsInView[idx])
                 }
             }
-        }
+        }*/
 
         for (var x = 0; x < objects.length; x++) {
             if (!(((id) => {
