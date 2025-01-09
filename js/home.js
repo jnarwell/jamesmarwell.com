@@ -250,6 +250,7 @@ async function createRenderer(objects, groups, globalPreferredOrder) {
             return
         }
         loaded[id] = true
+        console.log(objects[id])
         const loadedScene = await glbLoader.loadAsync(objects[id].modelURL)
         const loadedMesh = loadedScene.scenes[0].children[0]
         objects[id].threeMesh = loadedMesh
