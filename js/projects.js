@@ -82,7 +82,7 @@ export function getProjectList() {
                 descriptionURL: "/projects/nanofab_washer/desc.html",
                 imagesURL: "/projects/nanofab_washer/images.html",
                 scale: {
-                    x: .05, y: .05, z: .05
+                    x: .005, y: .005, z: .005
                 }
             },
             {
