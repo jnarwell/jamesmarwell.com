@@ -7,6 +7,7 @@ body {
 
     background-image: url('./info_background.png');
     background-size: cover;
+    background-position: bottom;
     text-transform: uppercase;
     font-family: 'ayuthaya';  /* Choose whatever name you want to reference it by */
     src: url('./ayuthaya-regular.ttf') format('truetype');

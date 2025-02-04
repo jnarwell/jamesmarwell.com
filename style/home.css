@@ -7,6 +7,7 @@ body {
     width: 100%;
     height: 100%;
     background-image: url('./background.png');
+    background-position: bottom;
     background-size: cover;
     text-transform: uppercase;
     font-family: 'ayuthaya';  /* Choose whatever name you want to reference it by */
@@ -103,9 +104,7 @@ body {
     opacity: 0;
 
     /* these are good to change */
-    border: 1px solid #808080;
     border-top: 0px;
-    background-color: white;
     border-bottom-right-radius: 5px;
     border-bottom-left-radius: 5px;
     width: 120px;
