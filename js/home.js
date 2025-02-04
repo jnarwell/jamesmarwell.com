@@ -841,7 +841,7 @@ glbLoader = new GLTFLoader(loadingManager);
     // I don't know why this is necessary but it is
     setTimeout(async () => {
         await res.deSelectGroup()
-    }, 1500)
+    })
 
     let selected = null
     function selectCallBack(id) {
