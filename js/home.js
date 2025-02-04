@@ -266,39 +266,41 @@ async function createRenderer(objects, groups, globalPreferredOrder) {
     }
 
     async function ensureLoadObject(id) {
-        if (loaded[id]) {
-            return;
-        }
-        loaded[id] = true;
-        console.log(objects[id]);
-        const loadedScene = await glbLoader.loadAsync(objects[id].modelURL);
-        const loadedMesh = loadedScene.scenes[0].children[0];
-        objects[id].threeMesh = loadedMesh;
+        try {
+            if (loaded[id]) return;
+            loaded[id] = true;
+            
+            const loadedScene = await glbLoader.loadAsync(objects[id].modelURL);
+            const loadedMesh = loadedScene.scenes[0].children[0];
+            objects[id].threeMesh = loadedMesh;
     
-        // Add the new shadow and material handling
-        loadedMesh.traverse((node) => {
-            if (node.isMesh) {
-                node.castShadow = true;
-                node.receiveShadow = true;
-                if (node.material) {
-                    node.material.envMapIntensity = 1.0;
-                    node.material.needsUpdate = true;
+            loadedMesh.traverse((node) => {
+                if (node.isMesh) {
+                    node.castShadow = true;
+                    node.receiveShadow = true;
+                    if (node.material) {
+                        node.material.envMapIntensity = 1.0;
+                        node.material.needsUpdate = true;
+                    }
                 }
+            });
+    
+            if ("scale" in objects[id].project) {
+                loadedMesh.scale.x = objects[id].project.scale.x;
+                loadedMesh.scale.y = objects[id].project.scale.y;
+                loadedMesh.scale.z = objects[id].project.scale.z;
+                objects[id].targetScale = {...loadedMesh.scale};
+            } else {
+                objects[id].targetScale = {x: 1, y: 1, z: 1};
             }
-        });
     
-        if ("scale" in objects[id].project) {
-            loadedMesh.scale.x = objects[id].project.scale.x;
-            loadedMesh.scale.y = objects[id].project.scale.y;
-            loadedMesh.scale.z = objects[id].project.scale.z;
+            objects[id].threeMesh.name = "" + id;
+            returned.three.scene.add(objects[id].threeMesh);
     
-            objects[id].targetScale = {...loadedMesh.scale};
-        } else {
-            objects[id].targetScale = {x: 1, y: 1, z: 1};
+        } catch (error) {
+            console.error(`Error loading model ${id}:`, error);
+            loaded[id] = false;
         }
-    
-        objects[id].threeMesh.name = "" + id;
-        returned.three.scene.add(objects[id].threeMesh);
     }
 
     window.THREE = returned.three
@@ -391,6 +393,8 @@ async function createRenderer(objects, groups, globalPreferredOrder) {
         }
     }
 
+    
+
     // new code
     async function putInViewObjectsRandom_Random_Spaced() {
         const MAX_Y_DIST = 2
@@ -407,6 +411,9 @@ async function createRenderer(objects, groups, globalPreferredOrder) {
             let posX = 0
             let posY = 0
             let maxMinDist = 0
+
+            
+
             for (var x = 0; x < 30; x++) {
                 let randomX = (Math.random() - .5) * 2. * MAX_X_DIST
                 let randomY = (Math.random() - .5) * 2. * MAX_Y_DIST
@@ -420,7 +427,7 @@ async function createRenderer(objects, groups, globalPreferredOrder) {
                 if (minDist < 1.7) continue
                 if (minDist > maxMinDist) {
                     posX = randomX
-                    posY = randomY
+                    posY = randomY  
                     maxMinDist = minDist
                 }
             }
@@ -635,7 +642,7 @@ async function createRenderer(objects, groups, globalPreferredOrder) {
                 }
                 return false
             }))(x)) {
-                if (isLoaded(x)) objects[x].threeMesh.position.z = 10
+                if (isLoaded(x)) objects[x].threeMesh.position.z = 2
             }
         }
     }
@@ -809,6 +816,12 @@ window.onload = async () => {
     groups = projectInfo.groups
 
     initTopBar(groups, selectCallBack)
+    
+    const loadingManager = new THREE.LoadingManager();
+    loadingManager.onProgress = (url, loaded, total) => {
+    console.log(`Loading: ${Math.round(loaded/total * 100)}%`);
+};
+glbLoader = new GLTFLoader(loadingManager);
 
     glbLoader = new GLTFLoader()
 
