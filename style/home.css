@@ -136,7 +136,7 @@ body {
     pointer-events: none;
     
     /* If you change the height of the top bar, you'll want to change this too */
-    top: 72 px;
+    top: 72px;
     
     background-color: #282828;
     border-bottom: 1px solid #808080;
