@@ -836,6 +836,8 @@ glbLoader = new GLTFLoader(loadingManager);
 
     const res = await createRenderer(objects, groups, projectInfo.preferredOrder)
 
+    console.log("new delay")
+
     // I don't know why this is necessary but it is
     setTimeout(async () => {
         await res.deSelectGroup()
