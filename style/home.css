@@ -7,7 +7,7 @@ body {
     width: 100%;
     height: 100%;
     background-image: url('./background.png');
-    background-position: bottom;
+    background-position: right top;
     background-size: cover;
     text-transform: uppercase;
     font-family: 'ayuthaya';  /* Choose whatever name you want to reference it by */
@@ -136,8 +136,9 @@ body {
     pointer-events: none;
     
     /* If you change the height of the top bar, you'll want to change this too */
-    top: 80px;
+    top: 72px;
     
+    background-color: #282828;
     border-bottom: 1px solid #808080;
     padding: 7px 20px;
     font-size: 16px;
