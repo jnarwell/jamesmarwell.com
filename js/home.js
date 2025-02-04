@@ -395,11 +395,15 @@ async function createRenderer(objects, groups, globalPreferredOrder) {
     async function putInViewObjectsRandom_Random_Spaced() {
         const MAX_Y_DIST = 2
         const MAX_X_DIST = .9 * MAX_Y_DIST * returned.elem.clientWidth / returned.elem.clientHeight
-
+    
+        // First ensure all objects are loaded
+        for (let i = 0; i < objectsInView.length; i++) {
+            await ensureLoadObject(objectsInView[i]);
+        }
+    
         let failureCount = 0
         let addedCount = 0
         while (failureCount < 10 && addedCount < objectsInView.length) {
-
             let posX = 0
             let posY = 0
             let maxMinDist = 0
@@ -408,6 +412,7 @@ async function createRenderer(objects, groups, globalPreferredOrder) {
                 let randomY = (Math.random() - .5) * 2. * MAX_Y_DIST
                 let minDist = 1e30
                 for (var y = 0; y < addedCount; y++) {
+                    if (!isLoaded(objectsInView[y])) continue;
                     let checkingPosition = objects[objectsInView[y]].threeMesh.position
                     let dist = Math.sqrt((checkingPosition.x - randomX) * (checkingPosition.x - randomX) + (checkingPosition.y - randomY) * (checkingPosition.y - randomY))
                     minDist = Math.min(dist, minDist)
@@ -419,22 +424,22 @@ async function createRenderer(objects, groups, globalPreferredOrder) {
                     maxMinDist = minDist
                 }
             }
-
+    
             if (maxMinDist == 0) {
                 failureCount++
                 continue
             }
-
+    
             let idx = addedCount++
-
-            await ensureLoadObject(objectsInView[idx])
-
-
+            
+            // Check if loaded before positioning
+            if (!isLoaded(objectsInView[idx])) continue;
+    
             objects[objectsInView[idx]].threeMesh.position.x = posX 
             objects[objectsInView[idx]].threeMesh.position.y = posY
             objects[objectsInView[idx]].threeMesh.position.z = 0
         }
-
+    
         for (var x = 0; x < objects.length; x++) {
             if (!(((id) => {
                 for (var j = 0; j < addedCount; j++) {
@@ -445,7 +450,7 @@ async function createRenderer(objects, groups, globalPreferredOrder) {
                 if (isLoaded(x)) objects[x].threeMesh.position.z = 10
             }
         }
-
+    
         return
     }
     
