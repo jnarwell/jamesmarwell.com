@@ -266,41 +266,37 @@ async function createRenderer(objects, groups, globalPreferredOrder) {
     }
 
     async function ensureLoadObject(id) {
-        try {
-            if (loaded[id]) return;
-            loaded[id] = true;
-            
-            const loadedScene = await glbLoader.loadAsync(objects[id].modelURL);
-            const loadedMesh = loadedScene.scenes[0].children[0];
-            objects[id].threeMesh = loadedMesh;
-    
-            loadedMesh.traverse((node) => {
-                if (node.isMesh) {
-                    node.castShadow = true;
-                    node.receiveShadow = true;
-                    if (node.material) {
-                        node.material.envMapIntensity = 1.0;
-                        node.material.needsUpdate = true;
-                    }
+        if (loaded[id]) return;
+        loaded[id] = true;
+        
+        const loadedScene = await glbLoader.loadAsync(objects[id].modelURL);
+        const loadedMesh = loadedScene.scenes[0].children[0];
+        objects[id].threeMesh = loadedMesh;
+
+        loadedMesh.traverse((node) => {
+            if (node.isMesh) {
+                node.castShadow = true;
+                node.receiveShadow = true;
+                if (node.material) {
+                    node.material.envMapIntensity = 1.0;
+                    node.material.needsUpdate = true;
                 }
-            });
-    
-            if ("scale" in objects[id].project) {
-                loadedMesh.scale.x = objects[id].project.scale.x;
-                loadedMesh.scale.y = objects[id].project.scale.y;
-                loadedMesh.scale.z = objects[id].project.scale.z;
-                objects[id].targetScale = {...loadedMesh.scale};
-            } else {
-                objects[id].targetScale = {x: 1, y: 1, z: 1};
             }
-    
-            objects[id].threeMesh.name = "" + id;
-            returned.three.scene.add(objects[id].threeMesh);
-    
-        } catch (error) {
-            console.error(`Error loading model ${id}:`, error);
-            loaded[id] = false;
+        });
+
+        if ("scale" in objects[id].project) {
+            loadedMesh.scale.x = objects[id].project.scale.x;
+            loadedMesh.scale.y = objects[id].project.scale.y;
+            loadedMesh.scale.z = objects[id].project.scale.z;
+            objects[id].targetScale = {...loadedMesh.scale};
+        } else {
+            objects[id].targetScale = {x: 1, y: 1, z: 1};
         }
+
+        loadedMesh.position.z = 10
+
+        objects[id].threeMesh.name = "" + id;
+        returned.three.scene.add(objects[id].threeMesh);
     }
 
     window.THREE = returned.three
@@ -407,14 +403,12 @@ async function createRenderer(objects, groups, globalPreferredOrder) {
     
         let failureCount = 0
         let addedCount = 0
-        while (failureCount < 10 && addedCount < objectsInView.length) {
+        while (failureCount < 100 && addedCount < objectsInView.length) {
             let posX = 0
             let posY = 0
             let maxMinDist = 0
 
-            
-
-            for (var x = 0; x < 30; x++) {
+            for (var x = 0; x < 10; x++) {
                 let randomX = (Math.random() - .5) * 2. * MAX_X_DIST
                 let randomY = (Math.random() - .5) * 2. * MAX_Y_DIST
                 let minDist = 1e30
@@ -422,6 +416,9 @@ async function createRenderer(objects, groups, globalPreferredOrder) {
                     if (!isLoaded(objectsInView[y])) continue;
                     let checkingPosition = objects[objectsInView[y]].threeMesh.position
                     let dist = Math.sqrt((checkingPosition.x - randomX) * (checkingPosition.x - randomX) + (checkingPosition.y - randomY) * (checkingPosition.y - randomY))
+                    if (isNaN(dist) || !isFinite(dist)) {
+                        continue;
+                    }
                     minDist = Math.min(dist, minDist)
                 }
                 if (minDist < 1.7) continue
@@ -439,14 +436,22 @@ async function createRenderer(objects, groups, globalPreferredOrder) {
     
             let idx = addedCount++
             
-            // Check if loaded before positioning
-            if (!isLoaded(objectsInView[idx])) continue;
+            if (!isLoaded(objectsInView[idx])) {
+                console.error("uh oh")
+                continue
+            }
     
             objects[objectsInView[idx]].threeMesh.position.x = posX 
             objects[objectsInView[idx]].threeMesh.position.y = posY
             objects[objectsInView[idx]].threeMesh.position.z = 0
         }
     
+        hideAllNotInView(addedCount)
+    
+        return
+    }
+
+    function hideAllNotInView(addedCount) {
         for (var x = 0; x < objects.length; x++) {
             if (!(((id) => {
                 for (var j = 0; j < addedCount; j++) {
@@ -454,11 +459,11 @@ async function createRenderer(objects, groups, globalPreferredOrder) {
                 }
                 return false
             }))(x)) {
-                if (isLoaded(x)) objects[x].threeMesh.position.z = 10
+                if (isLoaded(x)) {
+                    objects[x].threeMesh.position.z = 10
+                }
             }
         }
-    
-        return
     }
     
     async function putInViewObjectsRandom_Random() {
@@ -495,16 +500,18 @@ async function createRenderer(objects, groups, globalPreferredOrder) {
             objects[objectsInView[idx]].threeMesh.position.z = 0
         }
 
-        for (var x = 0; x < objects.length; x++) {
+        hideAllNotInView(addedCount)
+
+        /*for (var x = 0; x < objects.length; x++) {
             if (!(((id) => {
                 for (var j = 0; j < addedCount; j++) {
                     if (objectsInView[j] === id) return true
                 }
                 return false
             }))(x)) {
-                if (isLoaded(x)) objects[x].threeMesh.position.z = 10
+                if (isLoaded(x)) objects[x].threeMesh.position.z = 0
             }
-        }
+        }*/
 
         return
     }
@@ -514,15 +521,6 @@ async function createRenderer(objects, groups, globalPreferredOrder) {
         const MAX_Y_DIST = 2
         const MAX_X_DIST = .65 * MAX_Y_DIST * returned.elem.clientWidth / returned.elem.clientHeight
         const NUM_COL = Math.min(
-            Math.floor(MAX_X_DIST),
-            Math.ceil((objectsInView.length - 3) / 6)
-        )
-
-        console.log(
-            objectsInView, objects
-        )
-
-        console.log(
             Math.floor(MAX_X_DIST),
             Math.ceil((objectsInView.length - 3) / 6)
         )
@@ -599,6 +597,9 @@ async function createRenderer(objects, groups, globalPreferredOrder) {
             }
         }*/
 
+        hideAllNotInView(count)
+
+        /*
         for (var x = 0; x < objects.length; x++) {
             if (!(((id) => {
                 for (var j = 0; j < count; j++) {
@@ -606,9 +607,9 @@ async function createRenderer(objects, groups, globalPreferredOrder) {
                 }
                 return false
             }))(x)) {
-                if (isLoaded(x)) objects[x].threeMesh.position.z = 10
+                if (isLoaded(x)) objects[x].threeMesh.position.z = 0
             }
-        }
+        }*/
     }
 
     async function putInViewObjectsLine() {
@@ -642,7 +643,7 @@ async function createRenderer(objects, groups, globalPreferredOrder) {
                 }
                 return false
             }))(x)) {
-                if (isLoaded(x)) objects[x].threeMesh.position.z = 2
+                if (isLoaded(x)) objects[x].threeMesh.position.z = 10
             }
         }
     }
@@ -676,7 +677,6 @@ async function createRenderer(objects, groups, globalPreferredOrder) {
                     const currentObject = objects[returned.state.selection.nearestObjectId]
 
                     if (currentObject.url) {
-                        console.log("going to", currentObject.url)
                         const a = document.createElement("a")
                         a.href = currentObject.url
                         document.body.appendChild(a)
@@ -698,8 +698,6 @@ async function createRenderer(objects, groups, globalPreferredOrder) {
 
         returned.three.renderer.render(returned.three.scene, returned.three.camera)
     }
-
-    onResize()
 
     returned.selectGroup = selectGroup
     returned.deSelectGroup = deSelectGroup
@@ -840,9 +838,9 @@ glbLoader = new GLTFLoader(loadingManager);
     const res = await createRenderer(objects, groups, projectInfo.preferredOrder)
 
     // I don't know why this is necessary but it is
-    setTimeout(async () => {
+    /*setTimeout(async () => {
         await res.deSelectGroup()
-    }, 50)
+    }, 1000)*/
 
     let selected = null
     function selectCallBack(id) {
