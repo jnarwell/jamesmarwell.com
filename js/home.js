@@ -437,7 +437,6 @@ async function createRenderer(objects, groups, globalPreferredOrder) {
             let idx = addedCount++
             
             if (!isLoaded(objectsInView[idx])) {
-                console.error("uh oh")
                 continue
             }
     
@@ -838,9 +837,9 @@ glbLoader = new GLTFLoader(loadingManager);
     const res = await createRenderer(objects, groups, projectInfo.preferredOrder)
 
     // I don't know why this is necessary but it is
-    /*setTimeout(async () => {
+    setTimeout(async () => {
         await res.deSelectGroup()
-    }, 1000)*/
+    }, 1500)
 
     let selected = null
     function selectCallBack(id) {
