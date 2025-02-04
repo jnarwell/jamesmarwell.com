@@ -209,21 +209,21 @@ async function createRenderer(description) {
 
     // Enhanced lighting setup
     {
-        const hemiLight = new THREE.HemisphereLight(0xffffff, 0x444444, 0.5);
+        const hemiLight = new THREE.HemisphereLight(0xffffff, 0x444444, 1.1);
         returned.three.scene.add(hemiLight);
 
-        const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
+        const dirLight = new THREE.DirectionalLight(0xffffff, 2.8);
         dirLight.position.set(5, 5, 5);
         dirLight.castShadow = true;
         dirLight.shadow.mapSize.width = 1024;
         dirLight.shadow.mapSize.height = 1024;
         returned.three.scene.add(dirLight);
 
-        const dirLight2 = new THREE.DirectionalLight(0xffffff, 0.5);
+        const dirLight2 = new THREE.DirectionalLight(0xffffff, 1.5);
         dirLight2.position.set(-5, 5, -5);
         returned.three.scene.add(dirLight2);
 
-        const ambientLight = new THREE.AmbientLight(0xffffff, 0.3);
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.9);
         returned.three.scene.add(ambientLight);
 
         // Initialize environment map support

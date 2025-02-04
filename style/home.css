@@ -141,7 +141,7 @@ body {
     background-color: #282828;
     border-bottom: 1px solid #808080;
     padding: 7px 20px;
-    font-size: 16px;
+    font-size: 22px;
 
     /* this is for the transition on hover, you can change the duration & type */
     transition: opacity .1s linear;
