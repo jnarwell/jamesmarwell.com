@@ -2,7 +2,7 @@ export function randomPlacementType() {
     // return "grid"
     // return "random"
     // return "random_spaced"
-    return "grid"
+    return "random_spaced"
 }
 
 export function getProjectList() {
@@ -116,6 +116,17 @@ export function getProjectList() {
                 imagesURL: "/projects/hvcb/images.html",
                 scale: {
                     x: .3, y: .3, z: .3
+                }
+            },
+            {
+                title: "boweye_jig",
+                id: "boweye_jig",
+                group: "professional",
+                modelURL: "/projects/boweye_jig/boweye_jig.glb",
+                descriptionURL: "/projects/boweye_jig/desc.html",
+                imagesURL: "/projects/boweye_jig/images.html",
+                scale: {
+                    x: .005, y: .005, z: .005
                 }
             }
         ],

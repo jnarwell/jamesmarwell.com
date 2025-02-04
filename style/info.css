@@ -5,8 +5,19 @@ body {
     padding: 0px;
     display: flex;
 
-    background-image: url('./background_texture_info.jpg');
+    background-image: url('./info_background.png');
     background-size: cover;
+    text-transform: uppercase;
+    font-family: 'ayuthaya';  /* Choose whatever name you want to reference it by */
+    src: url('./ayuthaya-regular.ttf') format('truetype');
+    font-style: normal;
+    font-stretch: condensed;
+    color: rgba(255, 255, 255, 0.6); /* Dimmed white base */
+    text-shadow: 
+        0 0 3px rgba(255, 255, 255, 0.1),  /* Soft white glow */
+        0 0 5px rgba(255, 255, 255, 0.1);   /* Additional subtle blur */
+    letter-spacing: 1px;  /* Keep your current letter spacing */
+    font-weight: 100;  
 }
 
 #left {
@@ -91,5 +102,5 @@ body {
 #desc{
     padding-right: 10px;
     text-align: justify;
-    font-size: 1.7vw;
+    font-size: 1.15vw;
 }

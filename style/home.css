@@ -1,12 +1,24 @@
+
+
 /* Note to Jamie: shouldn't need to change anything here */
 body {
     margin: 0px;
     padding: 0px;
     width: 100%;
     height: 100%;
-
-    background-image: url('./background_texture.jpg');
+    background-image: url('./background.png');
     background-size: cover;
+    text-transform: uppercase;
+    font-family: 'ayuthaya';  /* Choose whatever name you want to reference it by */
+    src: url('./ayuthaya-regular.ttf') format('truetype');
+    font-style: normal;
+    font-stretch: condensed;
+    color: rgba(255, 255, 255, 0.6); /* Dimmed white base */
+    text-shadow: 
+        0 0 3px rgba(255, 255, 255, 0.1),  /* Soft white glow */
+        0 0 5px rgba(255, 255, 255, 0.1);   /* Additional subtle blur */
+    letter-spacing: 1px;  /* Keep your current letter spacing */
+    font-weight: 100;  
 }
 
 /* Note to Jamie: shouldn't need to change anything here */
@@ -39,13 +51,13 @@ body {
     /* change the height to whatever you want */
     height: 80px;
     /* also, you should be good to change the background color and the bottom border color */
-    border-bottom: 1px solid #808080;
+    /* border-bottom: 1px solid #808080; */
     /* background-color: white?; */
 }
 
 /* Note to Jamie: this is for your logo on the top left. */
 #logo {
-    width: 240px; 
+    width: 300px; 
     height: 60px;
 }
 
@@ -64,6 +76,10 @@ body {
  * be careful modifying it because the width is set by JavaScript */
 #projects-holder {
     display: flex;
+    justify-content: space-between;
+    width: 100%;  /* Take up full available width */
+    flex: 1;      /* Allow it to grow */
+    margin: 0 40px;  /* Add some margin on sides */
 }
 
 /* Note to Jamie: this is the style for each "group" of projects.
@@ -71,8 +87,7 @@ body {
  * something in the JavaScript.
  */
 .project {
-    width: 120px;
-    padding: 10px 0px;
+    padding: 10px 40px;
     text-align: center;
     cursor: pointer;
 
@@ -105,6 +120,7 @@ body {
  * in case you want to style them slightly differently or something. */
 .dropdown > .project {
     /* background-color: red?; */
+    width: 120px;
 }
 
 /* Note to Jamie: this is the style for the label which appears when you
@@ -142,7 +158,7 @@ body {
     flex-direction: column;
     align-items: center;
 
-    background: rgba(0,0,0,0.0);
+    /* background: rgba(0,0,0,0.0); */
 
     border-bottom-left-radius: 5px;
     border-left: rgba(0,0,0,0.0);
@@ -154,12 +170,21 @@ body {
 .feather {
     width: 30px;
     height: 30px;
-    stroke: #474747;
+    stroke: rgba(255, 255, 255, 0.6);
     stroke-width: 1.5px;
     margin: 15px;
 }
 
 a {
     text-decoration: none;
-    color: black;
+    font-family: 'ayuthaya';  /* Choose whatever name you want to reference it by */
+    src: url('./ayuthaya-regular.ttf') format('truetype');
+    font-style: normal;
+    font-stretch: condensed;
+    color: rgba(255, 255, 255, 0.6); /* Dimmed white base */
+    text-shadow: 
+        0 0 3px rgba(255, 255, 255, 0.1),  /* Soft white glow */
+        0 0 5px rgba(255, 255, 255, 0.1);   /* Additional subtle blur */
+    letter-spacing: 1px;  /* Keep your current letter spacing */
+    font-weight: 100; 
 }

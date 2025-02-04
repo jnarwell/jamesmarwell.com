@@ -135,15 +135,35 @@ async function createRenderer(objects, groups, globalPreferredOrder) {
     // TEMPORARY
     returned.three.camera.position.z = 5.
 
-    // initialize threeJS lights
-    {
-        const aLight = new THREE.AmbientLight(0xFFFFFF, .1)
-        returned.three.scene.add(aLight)
-        
-        const dLight = new THREE.DirectionalLight(0xffffff, 1.)
-        dLight.position.set(1, 1, 1)
-        returned.three.scene.add(dLight)
-    }
+    // Enhanced lighting setup
+    const hemiLight = new THREE.HemisphereLight(0xffffff, 0x444444, 1);
+    returned.three.scene.add(hemiLight);
+
+    const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
+    dirLight.position.set(5, 5, 5);
+    dirLight.castShadow = true;
+    dirLight.shadow.mapSize.width = 1024;
+    dirLight.shadow.mapSize.height = 1024;
+    returned.three.scene.add(dirLight);
+
+    const dirLight2 = new THREE.DirectionalLight(0xffffff, 0.5);
+    dirLight2.position.set(-5, 5, -5);
+    returned.three.scene.add(dirLight2);
+
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.3);
+    returned.three.scene.add(ambientLight);
+
+    // Initialize environment map support
+    const pmremGenerator = new THREE.PMREMGenerator(returned.three.renderer);
+    pmremGenerator.compileEquirectangularShader();
+
+    // Make sure renderer is set up for proper lighting
+    returned.three.renderer.outputEncoding = THREE.sRGBEncoding;
+    returned.three.renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    returned.three.renderer.toneMappingExposure = 1.2;
+    returned.three.renderer.physicallyCorrectLights = true;
+    returned.three.renderer.shadowMap.enabled = true;
+    returned.three.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
     // add threeJS element to root element
     returned.elem.appendChild( returned.three.renderer.domElement )    
@@ -247,26 +267,38 @@ async function createRenderer(objects, groups, globalPreferredOrder) {
 
     async function ensureLoadObject(id) {
         if (loaded[id]) {
-            return
+            return;
         }
-        loaded[id] = true
-        console.log(objects[id])
-        const loadedScene = await glbLoader.loadAsync(objects[id].modelURL)
-        const loadedMesh = loadedScene.scenes[0].children[0]
-        objects[id].threeMesh = loadedMesh
-
+        loaded[id] = true;
+        console.log(objects[id]);
+        const loadedScene = await glbLoader.loadAsync(objects[id].modelURL);
+        const loadedMesh = loadedScene.scenes[0].children[0];
+        objects[id].threeMesh = loadedMesh;
+    
+        // Add the new shadow and material handling
+        loadedMesh.traverse((node) => {
+            if (node.isMesh) {
+                node.castShadow = true;
+                node.receiveShadow = true;
+                if (node.material) {
+                    node.material.envMapIntensity = 1.0;
+                    node.material.needsUpdate = true;
+                }
+            }
+        });
+    
         if ("scale" in objects[id].project) {
-            loadedMesh.scale.x = objects[id].project.scale.x
-            loadedMesh.scale.y = objects[id].project.scale.y
-            loadedMesh.scale.z = objects[id].project.scale.z
-
-            objects[id].targetScale = {...loadedMesh.scale}
+            loadedMesh.scale.x = objects[id].project.scale.x;
+            loadedMesh.scale.y = objects[id].project.scale.y;
+            loadedMesh.scale.z = objects[id].project.scale.z;
+    
+            objects[id].targetScale = {...loadedMesh.scale};
         } else {
-            objects[id].targetScale = {x: 1, y: 1, z: 1}
+            objects[id].targetScale = {x: 1, y: 1, z: 1};
         }
-
-        objects[id].threeMesh.name = "" + id
-        returned.three.scene.add(objects[id].threeMesh)
+    
+        objects[id].threeMesh.name = "" + id;
+        returned.three.scene.add(objects[id].threeMesh);
     }
 
     window.THREE = returned.three
@@ -749,9 +781,9 @@ function initTopBar(projects, selectCallBack) {
         // formula for size to projects: total size - name - resume - contact - some slack
         const sizeToProjects = size - 240 - 240 - 50
 
-        const numProjects = Math.floor(sizeToProjects / 120)
+        const numProjects = Math.floor(sizeToProjects / 160)
 
-        projectsHolder.style.width = `${numProjects * 120}px`
+        // projectsHolder.style.width = `${numProjects * 120}px`
 
         for (var x = 0; x < projectElems.length; x++) projectElems[x].remove()
 

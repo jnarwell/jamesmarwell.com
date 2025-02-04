@@ -183,9 +183,22 @@ async function createRenderer(description) {
         const glbLoader = new GLTFLoader()
 
         const loadedScene = await glbLoader.loadAsync(description.modelURL)
-        const loadedMesh  = loadedScene.scenes[0].children[0]
+        const loadedMesh = loadedScene.scenes[0].children[0]
+
+        // Add shadow and material handling
+        loadedMesh.traverse((node) => {
+            if (node.isMesh) {
+                node.castShadow = true;
+                node.receiveShadow = true;
+                if (node.material) {
+                    node.material.envMapIntensity = 1.0;
+                    node.material.needsUpdate = true;
+                }
+            }
+        });
 
         returned.three.scene.add(loadedMesh)
+
 
         if ("scale" in description) {
             loadedMesh.scale.x = description.scale.x * 3
@@ -194,15 +207,37 @@ async function createRenderer(description) {
         }
     }
 
-    // initialize threeJS lights
+    // Enhanced lighting setup
     {
-        const aLight = new THREE.AmbientLight(0xFFFFFF, .1)
-        returned.three.scene.add(aLight)
-        
-        const dLight = new THREE.DirectionalLight(0xffffff, 1.)
-        dLight.position.set(1, 1, 1)
-        returned.three.scene.add(dLight)
-    }
+        const hemiLight = new THREE.HemisphereLight(0xffffff, 0x444444, 0.5);
+        returned.three.scene.add(hemiLight);
+
+        const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
+        dirLight.position.set(5, 5, 5);
+        dirLight.castShadow = true;
+        dirLight.shadow.mapSize.width = 1024;
+        dirLight.shadow.mapSize.height = 1024;
+        returned.three.scene.add(dirLight);
+
+        const dirLight2 = new THREE.DirectionalLight(0xffffff, 0.5);
+        dirLight2.position.set(-5, 5, -5);
+        returned.three.scene.add(dirLight2);
+
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.3);
+        returned.three.scene.add(ambientLight);
+
+        // Initialize environment map support
+        const pmremGenerator = new THREE.PMREMGenerator(returned.three.renderer);
+        pmremGenerator.compileEquirectangularShader();
+
+        // Configure renderer for proper lighting
+        returned.three.renderer.outputEncoding = THREE.sRGBEncoding;
+        returned.three.renderer.toneMapping = THREE.ACESFilmicToneMapping;
+        returned.three.renderer.toneMappingExposure = 1.2;
+        returned.three.renderer.physicallyCorrectLights = true;
+        returned.three.renderer.shadowMap.enabled = true;
+        returned.three.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    }   
     //returned.three.scene.add(new THREE.DirectionalLight(0xffffff, .9).position.set(1, .25, 0))
 
     // add threeJS element to root element
