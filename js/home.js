@@ -80,6 +80,76 @@ async function createRenderer(objects, groups, globalPreferredOrder) {
         returned.state.mouse.bActive = false
     })
 
+    // Add these event listeners after initializing your Three.js scene
+
+    // Prevent default touch behaviors on the canvas
+    returned.elem.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        
+        // Update mouse state to handle touch like mouse events
+        returned.state.mouse.bClicked = true;
+        returned.state.mouse.bHeld = true;
+        returned.state.mouse.bMovedSinceClicked = false;
+        
+        const touch = e.touches[0];
+        returned.state.mouse.canvasCoordinates.x = touch.clientX - returned.elem.getBoundingClientRect().x;
+        returned.state.mouse.canvasCoordinates.y = touch.clientY - returned.elem.getBoundingClientRect().y;
+        
+        returned.state.mouse.screenSpaceCoordinates.x = (returned.state.mouse.canvasCoordinates.x / returned.elem.getBoundingClientRect().width) * 2 - 1;
+        returned.state.mouse.screenSpaceCoordinates.y = -(returned.state.mouse.canvasCoordinates.y / returned.elem.getBoundingClientRect().height) * 2 + 1;
+    }, { passive: false });
+
+    returned.elem.addEventListener('touchmove', (e) => {
+        e.preventDefault();
+        
+        const touch = e.touches[0];
+        const newX = touch.clientX - returned.elem.getBoundingClientRect().x;
+        const newY = touch.clientY - returned.elem.getBoundingClientRect().y;
+        
+        returned.state.mouse.mouseDelta.x += newX - returned.state.mouse.canvasCoordinates.x;
+        returned.state.mouse.mouseDelta.y += newY - returned.state.mouse.canvasCoordinates.y;
+        
+        returned.state.mouse.canvasCoordinates.x = newX;
+        returned.state.mouse.canvasCoordinates.y = newY;
+        
+        returned.state.mouse.screenSpaceCoordinates.x = (newX / returned.elem.getBoundingClientRect().width) * 2 - 1;
+        returned.state.mouse.screenSpaceCoordinates.y = -(newY / returned.elem.getBoundingClientRect().height) * 2 + 1;
+        
+        returned.state.mouse.bMoved = true;
+        returned.state.mouse.bMovedSinceClicked = true;
+    }, { passive: false });
+
+    returned.elem.addEventListener('touchend', (e) => {
+        e.preventDefault();
+        returned.state.mouse.bHeld = false;
+        returned.state.mouse.bReleased = true;
+    }, { passive: false });
+
+    // Add these meta tags to your HTML head
+    document.head.innerHTML += `
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    `;
+
+    // Add these styles to your CSS
+    const style = document.createElement('style');
+    style.textContent = `
+        html, body {
+            overscroll-behavior-y: none;
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+        
+        #holder-3d {
+            touch-action: none;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+    `;
+    document.head.appendChild(style);
+
     function resetMouseState() {
         returned.state.mouse.mouseDelta = {x: 0, y: 0}
         returned.state.mouse.bReleased = false
