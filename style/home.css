@@ -20,6 +20,7 @@ body {
         0 0 5px rgba(255, 255, 255, 0.1);   /* Additional subtle blur */
     letter-spacing: 1px;  /* Keep your current letter spacing */
     font-weight: 100;  
+    overscroll-behavior-y: none;
 }
 
 /* Note to Jamie: shouldn't need to change anything here */
