@@ -59,8 +59,7 @@ body {
 
 /* Note to Jamie: this is for your logo on the top left. */
 #logo {
-    width: 300px; 
-    height: 60px;
+    width: 25%; 
 }
 
 /* Note to Jamie: these are the vertical lines between the logo and "groups", and "groups" and resume/contact */
