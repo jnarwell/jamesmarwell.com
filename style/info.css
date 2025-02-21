@@ -88,9 +88,11 @@ body {
 }
 
 #right-body {
-    width: calc(100% - 30px);
+    width: calc(100%);
     height: 100%;
     overflow-y: scroll;
+    padding-right: 40px;
+    padding-left: 30px;
 }
 
 #re-open-description {
