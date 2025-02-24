@@ -3,7 +3,7 @@ import { GLTFLoader } from "https://cdn.skypack.dev/three@0.132.2/examples/jsm/l
 
 import { getProjectList, randomPlacementType } from "/js/projects.js"
 
-let glbLoader = null
+let glbLoader = null;
 
 async function createRenderer(objects, groups, globalPreferredOrder) {
     const returned = { state: { mouse: { }, cursor: { }, selection: { } }, }
@@ -270,34 +270,38 @@ async function createRenderer(objects, groups, globalPreferredOrder) {
         if (loaded[id]) return;
         loaded[id] = true;
         
-        const loadedScene = await glbLoader.loadAsync(objects[id].modelURL);
-        const loadedMesh = loadedScene.scenes[0].children[0];
-        objects[id].threeMesh = loadedMesh;
+        try {
+            const loadedScene = await glbLoader.loadAsync(objects[id].modelURL);
+            const loadedMesh = loadedScene.scenes[0].children[0];
+            objects[id].threeMesh = loadedMesh;
 
-        loadedMesh.traverse((node) => {
-            if (node.isMesh) {
-                node.castShadow = true;
-                node.receiveShadow = true;
-                if (node.material) {
-                    node.material.envMapIntensity = 1.0;
-                    node.material.needsUpdate = true;
+            loadedMesh.traverse((node) => {
+                if (node.isMesh) {
+                    node.castShadow = true;
+                    node.receiveShadow = true;
+                    if (node.material) {
+                        node.material.envMapIntensity = 1.0;
+                        node.material.needsUpdate = true;
+                    }
                 }
+            });
+
+            if ("scale" in objects[id].project) {
+                loadedMesh.scale.x = objects[id].project.scale.x;
+                loadedMesh.scale.y = objects[id].project.scale.y;
+                loadedMesh.scale.z = objects[id].project.scale.z;
+                objects[id].targetScale = {...loadedMesh.scale};
+            } else {
+                objects[id].targetScale = {x: 1, y: 1, z: 1};
             }
-        });
 
-        if ("scale" in objects[id].project) {
-            loadedMesh.scale.x = objects[id].project.scale.x;
-            loadedMesh.scale.y = objects[id].project.scale.y;
-            loadedMesh.scale.z = objects[id].project.scale.z;
-            objects[id].targetScale = {...loadedMesh.scale};
-        } else {
-            objects[id].targetScale = {x: 1, y: 1, z: 1};
+            loadedMesh.position.z = 10
+
+            objects[id].threeMesh.name = "" + id;
+            returned.three.scene.add(objects[id].threeMesh);
+        } catch (error) {
+            console.error(`Failed to load model ${objects[id].modelURL}:`, error);
         }
-
-        loadedMesh.position.z = 10
-
-        objects[id].threeMesh.name = "" + id;
-        returned.three.scene.add(objects[id].threeMesh);
     }
 
     window.THREE = returned.three
@@ -393,7 +397,7 @@ async function createRenderer(objects, groups, globalPreferredOrder) {
     
 
     // new code
-    async function putInViewObjectsRandom_Random_Spaced() {
+    /* async function putInViewObjectsRandom_Random_Spaced() {
         const MAX_Y_DIST = 2
         const MAX_X_DIST = .9 * MAX_Y_DIST * returned.elem.clientWidth / returned.elem.clientHeight
     
@@ -449,7 +453,80 @@ async function createRenderer(objects, groups, globalPreferredOrder) {
         hideAllNotInView(addedCount)
     
         return
-    }
+    } */
+        async function putInViewObjectsRandom_Random_Spaced() {
+            const MAX_Y_DIST = 2;
+            const MAX_X_DIST = .9 * MAX_Y_DIST * returned.elem.clientWidth / returned.elem.clientHeight;
+        
+            // Calculate positions for all models
+            const positionsToUse = [];
+            let failureCount = 0;
+            let addedCount = 0;
+            
+            for (let i = 0; i < objectsInView.length; i++) {
+                let posX = 0;
+                let posY = 0;
+                let maxMinDist = 0;
+        
+                for (let attempts = 0; attempts < 10; attempts++) {
+                    let randomX = (Math.random() - .5) * 2 * MAX_X_DIST;
+                    let randomY = (Math.random() - .5) * 2 * MAX_Y_DIST;
+                    let minDist = 1e30;
+                    
+                    for (let j = 0; j < positionsToUse.length; j++) {
+                        let checkingPosition = positionsToUse[j];
+                        let dist = Math.sqrt(
+                            (checkingPosition.x - randomX) * (checkingPosition.x - randomX) + 
+                            (checkingPosition.y - randomY) * (checkingPosition.y - randomY)
+                        );
+                        
+                        if (isNaN(dist) || !isFinite(dist)) continue;
+                        minDist = Math.min(dist, minDist);
+                    }
+                    
+                    if (minDist < 1.7) continue;
+                    
+                    if (minDist > maxMinDist) {
+                        posX = randomX;
+                        posY = randomY;
+                        maxMinDist = minDist;
+                    }
+                }
+        
+                if (maxMinDist == 0) {
+                    failureCount++;
+                    if (failureCount > 100) break;
+                    continue;
+                }
+        
+                positionsToUse.push({ 
+                    index: objectsInView[addedCount++],
+                    x: posX,
+                    y: posY
+                });
+            }
+        
+            // Load models in batches to improve performance
+            const BATCH_SIZE = 3; // Load 3 models at a time
+            
+            for (let i = 0; i < positionsToUse.length; i += BATCH_SIZE) {
+                const batch = positionsToUse.slice(i, i + BATCH_SIZE);
+                
+                // Load batch in parallel
+                await Promise.all(batch.map(async (pos) => {
+                    await ensureLoadObject(pos.index);
+                    
+                    if (objects[pos.index].threeMesh) {
+                        objects[pos.index].threeMesh.position.x = pos.x;
+                        objects[pos.index].threeMesh.position.y = pos.y;
+                        objects[pos.index].threeMesh.position.z = 0;
+                    }
+                }));
+            }
+        
+            // Hide models not in view
+            hideAllNotInView(addedCount);
+        }
 
     function hideAllNotInView(addedCount) {
         for (var x = 0; x < objects.length; x++) {
@@ -804,27 +881,95 @@ function initTopBar(projects, selectCallBack) {
     }).observe(topBar)
 }
 
-window.onload = async () => {
-
-    let objects = []
-    let groups = []
-
-    const projectInfo = getProjectList()
-
-    groups = projectInfo.groups
-
-    initTopBar(groups, selectCallBack)
+// Function to decide whether to show bio page based on URL params and visitor status
+function shouldShowBioPage() {
+    // Check for URL parameter to skip bio
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('skipBio') === 'true') return false;
     
+    // Check if user has visited before
+    try {
+        return localStorage.getItem('hasVisitedBefore') !== 'true';
+    } catch (e) {
+        // In case localStorage is disabled
+        return true;
+    }
+}
+
+// Function to add the bio iframe if needed
+function showBioPageIfNeeded() {
+    if (!shouldShowBioPage()) return false;
+    
+    // Create iframe for bio page
+    const bioFrame = document.createElement('iframe');
+    bioFrame.id = 'bio-frame';
+    bioFrame.src = '/bio.html';
+    bioFrame.style.position = 'fixed';
+    bioFrame.style.top = '0';
+    bioFrame.style.left = '0';
+    bioFrame.style.width = '100%';
+    bioFrame.style.height = '100%';
+    bioFrame.style.border = 'none';
+    bioFrame.style.zIndex = '1000';
+    
+    document.body.appendChild(bioFrame);
+    
+    // Listen for messages from bio page
+    window.addEventListener('message', (event) => {
+        if (event.data.type === 'closeBio') {
+            closeBioPage();
+        }
+    });
+    
+    return true;
+}
+
+// Function to close the bio page
+function closeBioPage() {
+    const bioFrame = document.getElementById('bio-frame');
+    if (bioFrame) {
+        bioFrame.style.opacity = '0';
+        setTimeout(() => {
+            bioFrame.remove();
+        }, 500);
+    }
+}
+
+// Function to update loading progress and send to bio page if open
+function updateLoadingProgress(percent) {
+    const bioFrame = document.getElementById('bio-frame');
+    if (bioFrame) {
+        bioFrame.contentWindow.postMessage({
+            type: 'loadingProgress',
+            percent: percent
+        }, '*');
+    }
+}
+
+window.onload = async () => {
+    
+    // Show bio page if needed
+    const bioPageShown = showBioPageIfNeeded();
+    
+    let objects = [];
+    let groups = [];
+    const projectInfo = getProjectList();
+    groups = projectInfo.groups;
+    
+    initTopBar(groups, selectCallBack);
+    
+    // Initialize loading manager and GLB loader
     const loadingManager = new THREE.LoadingManager();
     loadingManager.onProgress = (url, loaded, total) => {
-    console.log(`Loading: ${Math.round(loaded/total * 100)}%`);
-};
-glbLoader = new GLTFLoader(loadingManager);
-
-    glbLoader = new GLTFLoader()
-
-    for (var x = 0; x < projectInfo.projects.length; x++) {
-        const project = projectInfo.projects[x]
+        const percent = (loaded / total) * 100;
+        updateLoadingProgress(percent);
+    };
+    
+    glbLoader = new GLTFLoader(loadingManager);
+    
+    // Prepare object data
+    for (let x = 0; x < projectInfo.projects.length; x++) {
+        const project = projectInfo.projects[x];
         objects.push({
             modelURL: project.modelURL,
             project: project,
@@ -832,45 +977,100 @@ glbLoader = new GLTFLoader(loadingManager);
             name: project.title,
             url: `/info.html?project=${project.id}`,
             group: project.group
-        })
+        });
     }
-
-    const res = await createRenderer(objects, groups, projectInfo.preferredOrder)
-
-    console.log("new delay")
-
-    // I don't know why this is necessary but it is
-    setTimeout(async () => {
-        await res.deSelectGroup()
-    })
-
-    let selected = null
+    
+    // Create a modified ensureLoadObject function that handles loading progress
+    /* async function ensureLoadObject(id) {
+        if (objects[id].threeMesh !== null) return;
+        
+        try {
+            const gltf = await new Promise((resolve, reject) => {
+                glbLoader.load(
+                    objects[id].modelURL,
+                    resolve,
+                    (xhr) => {
+                        // Calculate overall progress
+                        const totalModels = objects.length;
+                        const loadedModels = objects.filter(obj => obj.threeMesh !== null).length;
+                        const thisModelProgress = xhr.loaded / xhr.total;
+                        
+                        // Calculate weighted progress percentage
+                        const overallPercent = ((loadedModels + thisModelProgress) / totalModels) * 100;
+                        updateLoadingProgress(overallPercent);
+                    },
+                    reject
+                );
+            });
+            
+            const loadedMesh = gltf.scenes[0].children[0];
+            objects[id].threeMesh = loadedMesh;
+            
+            loadedMesh.traverse((node) => {
+                if (node.isMesh) {
+                    node.castShadow = true;
+                    node.receiveShadow = true;
+                    if (node.material) {
+                        node.material.envMapIntensity = 1.0;
+                        node.material.needsUpdate = true;
+                    }
+                }
+            });
+            
+            if ("scale" in objects[id].project) {
+                loadedMesh.scale.x = objects[id].project.scale.x;
+                loadedMesh.scale.y = objects[id].project.scale.y;
+                loadedMesh.scale.z = objects[id].project.scale.z;
+                objects[id].targetScale = {...loadedMesh.scale};
+            } else {
+                objects[id].targetScale = {x: 1, y: 1, z: 1};
+            }
+            
+            loadedMesh.position.z = 10;
+            loadedMesh.name = "" + id;
+            returned.three.scene.add(loadedMesh);
+            
+        } catch (error) {
+            console.error(`Failed to load model ${objects[id].modelURL}:`, error);
+        }
+    } */
+    
+    const res = await createRenderer(objects, groups, projectInfo.preferredOrder);
+    
+    // Replace the original ensureLoadObject with our new version
+    /* res.ensureLoadObject = ensureLoadObject; */
+    
+    // IMPORTANT: Fix the double-loading issue by directly calling deSelectGroup
+    // Instead of using setTimeout
+    await res.deSelectGroup();
+    
+    let selected = null;
     function selectCallBack(id) {
         if (id === selected) {
-            res.deSelectGroup()
-            selected = null
+            res.deSelectGroup();
+            selected = null;
         } else {
-            selected = id
-            res.selectGroup(selected)
+            selected = id;
+            res.selectGroup(selected);
         }
     }
-
-    res.elem.style.width = "100%"
-    res.elem.style.height = "100%"
-
-    document.querySelector("#three-canvas").appendChild(res.elem)
-
-    let last = Date.now()
-
+    
+    res.elem.style.width = "100%";
+    res.elem.style.height = "100%";
+    
+    document.querySelector("#three-canvas").appendChild(res.elem);
+    
+    let last = Date.now();
+    
     function frame() {
-        let now = Date.now()
-        let elapsed = now - last 
-        last = now
-
-        res.frame(elapsed / 1000)
-
-        window.requestAnimationFrame(frame)
+        let now = Date.now();
+        let elapsed = now - last;
+        last = now;
+        
+        res.frame(elapsed / 1000);
+        
+        window.requestAnimationFrame(frame);
     }
-
-    frame()
-}
+    
+    frame();
+};

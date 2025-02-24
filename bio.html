@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>James Marwell - Bio</title>
+    <link rel="stylesheet" href="/style/bio.css">
+    <script src="https://unpkg.com/feather-icons"></script>
+    <script src="/js/bio.js" type="module"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+    <div id="bio-container">
+        <div id="bio-content">
+            <div id="bio-close-button">&times;</div>
+            
+            <header>
+                <h1>James Marwell</h1>
+                <div class="bio-subtitle">Mechanical Engineer and Builder</div>
+            </header>
+            
+            <div class="bio-text">
+                <p>
+                    Welcome to my portfolio! As you will see I'm a mechanical engineer who loves building anything and everything.
+                </p>
+                <p>
+                    My work spans professional projects, academic assignments, and personal explorations.
+                    Each model showcases different aspects of my design philosophy and technical skills.
+                </p>
+                <p>
+                    Feel free to navigate through the categories above to explore my work, 
+                    or interact directly with the 3D models (click on them) to get a better look.
+                </p>
+            </div>
+            
+            <div class="bio-section">
+                <h2>Education</h2>
+                <p>Stanford University, M.S. in Mechanical Engineering</p>
+                <!-- Add more education details as needed -->
+            </div>
+            
+            <div class="bio-section">
+                <h2>Skills</h2>
+                <div class="skills-list">
+                    <span>3D Modeling</span>
+                    <span>Mechanical Design</span>
+                    <span>Additive Manufacturing</span>
+                    <span>CNC/Traditional Machining</span>
+                    <span>Mechanical/FEA Analysis</span>
+                </div>
+            </div>
+            
+            <div class="bio-loading-info">
+                <div class="loading-text">Loading Portfolio: <span id="loading-percentage">0%</span></div>
+                <div class="loading-progress-container">
+                    <div id="loading-progress-bar"></div>
+                </div>
+                <div class="continue-prompt">
+                    Click the X in the corner to continue to the portfolio
+                    <span class="prompt-note">(Models will continue loading in the background)</span>
+                </div>
+            </div>
+            
+            <div id="contact-icons">
+                <a href="https://www.linkedin.com/in/james-marwell-90555b1b1/" target="_blank"><i data-feather="linkedin"></i></a>
+                <a href="mailto:marwell@stanford.edu" target="_blank"><i data-feather="mail"></i></a>
+                <a href="https://github.com/jnarwell/" target="_blank"><i data-feather="github"></i></a>
+            </div>
+        </div>
+    </div>
+    <script>
+        feather.replace();
+    </script>
+</body>
+</html>
