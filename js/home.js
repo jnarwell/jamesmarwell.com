@@ -934,6 +934,32 @@ function closeBioPage() {
         }, 500);
     }
 }
+function openBioPage() {
+    // Don't open if already open
+    if (document.getElementById('bio-frame')) return;
+    
+    // Create iframe for bio page
+    const bioFrame = document.createElement('iframe');
+    bioFrame.id = 'bio-frame';
+    bioFrame.src = '/bio.html';
+    bioFrame.style.position = 'fixed';
+    bioFrame.style.top = '0';
+    bioFrame.style.left = '0';
+    bioFrame.style.width = '100%';
+    bioFrame.style.height = '100%';
+    bioFrame.style.border = 'none';
+    bioFrame.style.zIndex = '1000';
+    bioFrame.style.transition = 'opacity 0.3s ease';
+    
+    document.body.appendChild(bioFrame);
+    
+    // Listen for messages from bio page
+    window.addEventListener('message', (event) => {
+        if (event.data.type === 'closeBio') {
+            closeBioPage();
+        }
+    });
+}
 
 // Function to update loading progress and send to bio page if open
 function updateLoadingProgress(percent) {
@@ -1071,6 +1097,14 @@ window.onload = async () => {
         
         window.requestAnimationFrame(frame);
     }
+    const bioLink = document.getElementById('bio-link');
+    if (bioLink) {
+        bioLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            openBioPage();
+        });
+    }
+
     
     frame();
 };
