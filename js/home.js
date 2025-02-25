@@ -932,7 +932,7 @@ function closeBioPage() {
             const url = new URL(window.location.href);
             url.searchParams.set('skipBio', 'true');
             window.history.replaceState({}, '', url);
-        }, 500);
+        }, 50);
     }
 }
 function openBioPage() {
