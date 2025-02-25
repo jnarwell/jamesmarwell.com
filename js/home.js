@@ -119,11 +119,12 @@ async function createRenderer(objects, groups, globalPreferredOrder) {
     // initialize the logo
 
     document.querySelector("#logo").onclick = () => {
-        const a = document.createElement("a")
-        a.href = "/"
-        document.body.appendChild(a)
-        a.click()
-    }
+        const a = document.createElement("a");
+        a.href = "/?skipBio=true";  // Add skipBio parameter to prevent bio from showing
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+    };
 
     // initiate threeJS
     returned.three = { }
@@ -887,13 +888,8 @@ function shouldShowBioPage() {
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get('skipBio') === 'true') return false;
     
-    // Check if user has visited before
-    try {
-        return localStorage.getItem('hasVisitedBefore') !== 'true';
-    } catch (e) {
-        // In case localStorage is disabled
-        return true;
-    }
+    // Always show bio on fresh page load
+    return true;
 }
 
 // Function to add the bio iframe if needed
@@ -931,6 +927,11 @@ function closeBioPage() {
         bioFrame.style.opacity = '0';
         setTimeout(() => {
             bioFrame.remove();
+            
+            // Add a parameter to the URL to indicate bio has been seen this session
+            const url = new URL(window.location.href);
+            url.searchParams.set('skipBio', 'true');
+            window.history.replaceState({}, '', url);
         }, 500);
     }
 }

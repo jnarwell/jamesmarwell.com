@@ -43,18 +43,17 @@ function initBioPage() {
 
 // Centralized close handling
 function handleClose() {
-    console.log('Close triggered');
     const isDirectLoad = window.self === window.top;
     
     if (isDirectLoad) {
         // If opened directly, navigate to main page
-        window.location.href = '/index.html';
+        window.location.href = '/index.html?skipBio=true';
     } else {
         // If in iframe, tell parent to close
         window.parent.postMessage({ type: 'closeBio' }, '*');
     }
     
-    // Mark as visited so bio won't show next time
+    // Mark as visited function still called for compatibility
     markAsVisited();
 }
 
@@ -72,12 +71,11 @@ function updateLoadingProgress(percent) {
 }
 
 function markAsVisited() {
-    try {
-        localStorage.setItem('hasVisitedBefore', 'true');
-    } catch (e) {
-        // Handle localStorage error silently
-        console.warn('Could not save visit status to localStorage');
-    }
+    // We're no longer using localStorage to track visits
+    // Instead, we use URL parameters for the current session
+    
+    // This function is kept for compatibility with existing code
+    // but doesn't need to store anything in localStorage anymore
 }
 
 function hasVisitedBefore() {
