@@ -752,14 +752,14 @@ async function createRenderer(objects, groups, globalPreferredOrder) {
         if (returned.state.mouse.bReleased) {
             if (!returned.state.mouse.bMovedSinceClicked) {
                 if (returned.state.selection) {
-                    const currentObject = objects[returned.state.selection.nearestObjectId]
-
+                    const currentObject = objects[returned.state.selection.nearestObjectId];
+        
                     if (currentObject.url) {
-                        const a = document.createElement("a")
-                        a.href = currentObject.url
-                        document.body.appendChild(a)
-                        a.click()
-                        a.remove()
+                        const a = document.createElement("a");
+                        a.href = currentObject.url;
+                        document.body.appendChild(a);
+                        a.click();
+                        a.remove();
                     }
                 }
             }
@@ -886,9 +886,25 @@ function initTopBar(projects, selectCallBack) {
 function shouldShowBioPage() {
     // Check for URL parameter to skip bio
     const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get('skipBio') === 'true') return false;
     
-    // Always show bio on fresh page load
+    // If skipBio=true is in the URL, don't show bio
+    if (urlParams.get('skipBio') === 'true') {
+        return false;
+    }
+    
+    // Check the document's referrer to see if the user is navigating within the site
+    const referrer = document.referrer;
+    
+    // If the referrer contains your domain, they're navigating from another page on your site
+    // This checks if they're coming from an info.html page or any internal page
+    if (referrer && (
+        referrer.includes('/info.html') || 
+        referrer.includes(window.location.hostname)
+    )) {
+        return false;
+    }
+    
+    // In all other cases (new tab, direct URL, external link), show the bio
     return true;
 }
 
@@ -1002,7 +1018,7 @@ window.onload = async () => {
             project: project,
             threeMesh: null,
             name: project.title,
-            url: `/info.html?project=${project.id}`,
+            url: `/info.html?project=${project.id}&fromHome=true`,
             group: project.group
         });
     }

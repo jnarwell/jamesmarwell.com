@@ -22,6 +22,34 @@ window.onload = async () => {
 
     if (!description) {err(); return}
 
+    if (description.ipProtected) {
+        // Create IP tag if it doesn't exist yet
+        let ipTag = document.getElementById('ip-protection-tag');
+        if (!ipTag) {
+            ipTag = document.createElement('div');
+            ipTag.id = 'ip-protection-tag';
+            ipTag.textContent = 'IP';
+            document.querySelector('#left-body').appendChild(ipTag);
+        }
+        
+        // Make sure the tag is visible
+        ipTag.style.display = 'block';
+        
+        // Position it relative to the left-body
+        ipTag.style.position = 'absolute';
+        ipTag.style.top = '10px';
+        ipTag.style.right = '10px';
+        ipTag.style.zIndex = '100';
+    }
+
+    function navigateToHome() {
+        const a = document.createElement("a");
+        a.href = "/?skipBio=true";
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+    }
+
     document.querySelector("#project-title").textContent = description.title
 
     console.log(description)
@@ -49,11 +77,14 @@ window.onload = async () => {
     // initialize the logo
 
     document.querySelector("#logo").onclick = () => {
-        const a = document.createElement("a")
-        a.href = "/"
-        document.body.appendChild(a)
-        a.click()
-    }
+        const a = document.createElement("a");
+        // No need for the skipBio parameter anymore since we're using referrer checking
+        a.href = "/";
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+    };
+
 
     //initialize renderer
     const renderer = await createRenderer(description)

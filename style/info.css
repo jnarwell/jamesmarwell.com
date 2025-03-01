@@ -60,6 +60,7 @@ body {
 #left-body {
     width: 100%;
     height: calc(100% - 81px);
+    position: relative;
 }
 
 #right {
@@ -106,4 +107,81 @@ body {
     padding-right: 10px;
     text-align: justify;
     font-size: 1.15 vw;
+}
+
+#right-body {
+    font-family: 'ayuthaya', monospace;
+    color: rgba(255, 255, 255, 0.6);
+    text-shadow: 0 0 3px rgba(255, 255, 255, 0.1), 0 0 5px rgba(255, 255, 255, 0.1);
+    letter-spacing: 1px;
+    font-weight: 100;
+    padding-top: 20px;
+}
+
+#right-body h1 {
+    margin: 0 0 20px 0;
+    font-size: 28px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-weight: normal;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.bio-text {
+    line-height: 1.6;
+    margin-bottom: 30px;
+    font-size: 1.15vw;
+}
+
+.bio-text p {
+    margin-bottom: 15px;
+    text-align: justify;
+    text-transform: none;
+}
+
+.bio-section {
+    margin-bottom: 30px;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    padding-top: 20px;
+}
+
+.bio-section h2 {
+    font-size: 18px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-weight: normal;
+    margin-bottom: 15px;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.skills-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.skills-list span {
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 5px 10px;
+    border-radius: 3px;
+    font-size: 14px;
+    text-transform: none;
+}
+
+#ip-protection-tag {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: rgba(143, 0, 0, 0.7);
+    color: rgba(255, 255, 255, 0.8);
+    font-family: 'ayuthaya', monospace;
+    font-size: 18px;
+    letter-spacing: 1px;
+    padding: 5px 10px;
+    border-radius: 3px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    text-transform: uppercase;
+    z-index: 100;
+    display: none; /* Hidden by default, shown via JavaScript */
+    text-shadow: 0 0 3px rgba(255, 255, 255, 0.1), 0 0 5px rgba(255, 255, 255, 0.1);
 }

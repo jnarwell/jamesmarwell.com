@@ -81,6 +81,7 @@ export function getProjectList() {
                 modelURL: "/projects/nanofab_washer/nanofab_washer.glb",
                 descriptionURL: "/projects/nanofab_washer/desc.html",
                 imagesURL: "/projects/nanofab_washer/images.html",
+                ipProtected: true,
                 scale: {
                     x: .07, y: .07, z: .07
                 }
@@ -114,6 +115,7 @@ export function getProjectList() {
                 modelURL: "/projects/hvcb/hvcb.glb",
                 descriptionURL: "/projects/hvcb/desc.html",
                 imagesURL: "/projects/hvcb/images.html",
+                ipProtected: true,
                 scale: {
                     x: .3, y: .3, z: .3
                 }
@@ -125,6 +127,7 @@ export function getProjectList() {
                 modelURL: "/projects/boweye_jig/boweye_jig.glb",
                 descriptionURL: "/projects/boweye_jig/desc.html",
                 imagesURL: "/projects/boweye_jig/images.html",
+                ipProtected: true,
                 scale: {
                     x: .005, y: .005, z: .005
                 }
