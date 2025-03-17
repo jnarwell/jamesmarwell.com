@@ -158,6 +158,9 @@ window.onload = async () => {
                     if (imagesElem) {
                         document.querySelector("#left-body").appendChild(imagesElem)
                     }
+                    
+                    // Change background when displaying images
+                    document.body.style.backgroundImage = "url('./style/info_background_image.png')";
                 }
             }, {once: true})
         })
@@ -176,6 +179,9 @@ window.onload = async () => {
             if (imagesElem) imagesElem.remove()
             
             document.querySelector("#left-body").appendChild(renderer.elem)
+            
+            // Revert background when reopening description
+            document.body.style.backgroundImage = "url('./style/info_background.png')";
         }
     }
 }
