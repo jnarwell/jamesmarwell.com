@@ -155,6 +155,18 @@ export function getProjectList() {
                 scale: {
                     x: .5, y: .5, z: .5
                 }
+            },
+            {
+                title: "machineD",
+                id: "machineD",
+                group: "classwork",
+                modelURL: "/projects/machineD/machineD.glb",
+                descriptionURL: "/projects/machineD/desc.html",
+                imagesURL: "/projects/machineD/images.html",
+                ipProtected: false,
+                scale: {
+                    x: .5, y: .5, z: .5
+                }
             }
         ],
         groups: [

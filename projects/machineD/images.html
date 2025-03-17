@@ -1,0 +1,50 @@
+<div style="width: 100%; height: 100%;">
+    <style>
+        .image-gallery {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .image-holder {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            flex-grow: 1;
+        }
+
+        .image-holder > img {
+            max-height: 100%;
+            object-fit: cover;
+            vertical-align: bottom;
+            max-height: 275px;
+        }
+
+        li:last-child {
+            flex-grow: 10;
+        }
+    </style>
+    <div class="image-gallery">
+        <div class="image-holder">
+            <img src="./projects/machineD/images/first_proto.png">
+            <p>first prototype</p>
+        </div>
+        <div class="image-holder">
+            <img src="./projects/machineD/images/second_proto.png">
+            <p>second prototype</p>
+        </div>
+        <div class="image-holder">
+            <img src="./projects/machineD/images/fea_sim.png">
+            <p>finite element analysis simulation</p>
+        </div>
+        <div class="image-holder">
+            <img src="./projects/machineD/images/assem_drawing.png">
+            <p>assembly drawing</p>
+        </div>
+        <div class="image-holder">
+            <img src="./projects/machineD/images/final_proto.png">
+            <p>machineD</p>
+        </div>
+    </div>
+</div>
