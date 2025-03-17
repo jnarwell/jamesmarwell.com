@@ -131,6 +131,18 @@ export function getProjectList() {
                 scale: {
                     x: .005, y: .005, z: .005
                 }
+            },
+            {
+                title: "water_screw",
+                id: "water_screw",
+                group: "classwork",
+                modelURL: "/projects/water_screw/water_screw.glb",
+                descriptionURL: "/projects/water_screw/desc.html",
+                imagesURL: "/projects/water_screw/images.html",
+                ipProtected: false,
+                scale: {
+                    x: .02, y: .02, z: .02
+                }
             }
         ],
         groups: [
