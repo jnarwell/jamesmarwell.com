@@ -143,6 +143,18 @@ export function getProjectList() {
                 scale: {
                     x: .02, y: .02, z: .02
                 }
+            },
+            {
+                title: "assistive_dozer",
+                id: "assistive_dozer",
+                group: "classwork",
+                modelURL: "/projects/assistive_dozer/assistive_dozer.glb",
+                descriptionURL: "/projects/assistive_dozer/desc.html",
+                imagesURL: "/projects/assistive_dozer/images.html",
+                ipProtected: false,
+                scale: {
+                    x: .5, y: .5, z: .5
+                }
             }
         ],
         groups: [
