@@ -873,13 +873,34 @@ function initTopBar(projects, selectCallBack) {
 
         // projectsHolder.style.width = `${numProjects * 120}px`
 
-        for (var x = 0; x < projectElems.length; x++) projectElems[x].remove()
-
+        for (const el of projectElems) {
+            if (el.parentNode && el.parentNode !== projectsHolder) continue; // leave other parents alone
+            el.remove();
+          }
+            const ro = new ResizeObserver((entries) => {
+                for (const entry of entries) {
+                  const root = entry.target;                 // element being observed
+              
+                  /* 1️⃣  Get or create the child you want to append */
+                  let childNode = root.querySelector('.viewer-canvas');
+                  if (!childNode) {
+                    childNode = document.createElement('canvas');
+                    childNode.className = 'viewer-canvas';
+                    // ... any initialisation you normally do here ...
+                  }
+              
+                  /* 2️⃣  Append only if it isn’t already attached */
+                  if (childNode instanceof Node && childNode.parentNode !== root) {
+                    root.appendChild(childNode);
+                  }
+                }
+              });
         for (var x = 0; x < numProjects - 1; x++) projectsHolder.appendChild(projectElems[x])
         for (var x = Math.max(numProjects - 1, 0); x < projectElems.length; x++) dropDownContainer.appendChild(projectElems[x])
 
         projectsHolder.appendChild(dropDownSelector)
     }).observe(topBar)
+    
 }
 
 // Function to decide whether to show bio page based on URL params and visitor status
