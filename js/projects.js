@@ -167,6 +167,18 @@ export function getProjectList() {
                 scale: {
                     x: .5, y: .5, z: .5
                 }
+            },
+            {
+                title: "pete_box",
+                id: "pete_box",
+                group: "classwork",
+                modelURL: "/projects/pete_box/pete_box.glb",
+                descriptionURL: "/projects/pete_box/desc.html",
+                imagesURL: "/projects/pete_box/images.html",
+                ipProtected: false,
+                scale: {
+                    x: .006, y: .006, z: .006
+                }
             }
         ],
         groups: [
