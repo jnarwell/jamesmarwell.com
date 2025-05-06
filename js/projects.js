@@ -27,7 +27,7 @@ export function getProjectList() {
                 descriptionURL: "/projects/terminator_foot/desc.html",
                 imagesURL: "/projects/terminator_foot/images.html",
                 scale: {
-                    x: .005, y: .005, z: .005
+                    x: .15, y: .15, z: .15
                 }
             },
             {
@@ -38,7 +38,7 @@ export function getProjectList() {
                 descriptionURL: "/projects/cereal_container/desc.html",
                 imagesURL: "/projects/cereal_container/images.html",
                 scale: {
-                    x: .005, y: .005, z: .005
+                    x: .75, y: .75, z: .75
                 }
             },
             {
@@ -94,7 +94,7 @@ export function getProjectList() {
                 descriptionURL: "/projects/school_bench/desc.html",
                 imagesURL: "/projects/school_bench/images.html",
                 scale: {
-                    x: .15, y: .15, z: .15
+                    x: .2, y: .2, z: .2
                 }
             },
             {
@@ -129,7 +129,7 @@ export function getProjectList() {
                 imagesURL: "/projects/boweye_jig/images.html",
                 ipProtected: true,
                 scale: {
-                    x: .005, y: .005, z: .005
+                    x: .3, y: .3, z: .3
                 }
             },
             {
@@ -177,7 +177,7 @@ export function getProjectList() {
                 imagesURL: "/projects/pete_box/images.html",
                 ipProtected: false,
                 scale: {
-                    x: .006, y: .006, z: .006
+                    x: .06, y: .06, z: .06
                 }
             }
         ],

@@ -1,5 +1,6 @@
 import * as THREE from "https://cdn.skypack.dev/three@0.132.2"
-import { GLTFLoader } from "https://cdn.skypack.dev/three@0.132.2/examples/jsm/loaders/GLTFLoader"
+import { GLTFLoader } from "https://cdn.skypack.dev/three@0.132.2/examples/jsm/loaders/GLTFLoader.js"
+import { MeshoptDecoder } from "https://cdn.jsdelivr.net/npm/three@0.132.2/examples/jsm/libs/meshopt_decoder.module.js"
 
 import { getProjectList, randomPlacementType } from "/js/projects.js"
 
@@ -1030,6 +1031,7 @@ window.onload = async () => {
     };
     
     glbLoader = new GLTFLoader(loadingManager);
+    glbLoader.setMeshoptDecoder( MeshoptDecoder );
     
     // Prepare object data
     for (let x = 0; x < projectInfo.projects.length; x++) {

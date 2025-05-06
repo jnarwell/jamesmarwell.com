@@ -1,8 +1,9 @@
 import {getProjectDescriptionById} from "/js/projects.js"
 
 import * as THREE from "https://cdn.skypack.dev/three@0.132.2"
-import { GLTFLoader } from "https://cdn.skypack.dev/three@0.132.2/examples/jsm/loaders/GLTFLoader"
+import { GLTFLoader }  from "https://cdn.skypack.dev/three@0.132.2/examples/jsm/loaders/GLTFLoader.js"
 import { OrbitControls } from "https://cdn.skypack.dev/three@0.132.2/examples/jsm/controls/OrbitControls"
+import { MeshoptDecoder } from "https://cdn.jsdelivr.net/npm/three@0.132.2/examples/jsm/libs/meshopt_decoder.module.js"
 /*
 import * as THREE from "three"
 
@@ -218,6 +219,7 @@ async function createRenderer(description) {
     // Temporary: add the object
     {
         const glbLoader = new GLTFLoader()
+        glbLoader.setMeshoptDecoder( MeshoptDecoder );
 
         const loadedScene = await glbLoader.loadAsync(description.modelURL)
         const loadedMesh = loadedScene.scenes[0].children[0]
