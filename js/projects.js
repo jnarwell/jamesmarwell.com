@@ -133,6 +133,42 @@ export function getProjectList() {
                 }
             },
             {
+                title: "ct_cyclic_loading_fixture",
+                id: "ct_cyclic_loading_fixture",
+                group: "professional",
+                modelURL: "/projects/ct_cyclic_loading_fixture/ct_cyclic_loading_fixture.glb",
+                descriptionURL: "/projects/ct_cyclic_loading_fixture/desc.html",
+                imagesURL: "/projects/ct_cyclic_loading_fixture/images.html",
+                ipProtected: true,
+                scale: {
+                    x: .2, y: .2, z: .2
+                }
+            },
+            {
+                title: "bracket_fatigue_fixture",
+                id: "bracket_fatigue_fixture",
+                group: "professional",
+                modelURL: "/projects/bracket_fatigue_fixture/bracket_fatigue_fixture.glb",
+                descriptionURL: "/projects/bracket_fatigue_fixture/desc.html",
+                imagesURL: "/projects/bracket_fatigue_fixture/images.html",
+                ipProtected: true,
+                scale: {
+                    x: .25, y: .25, z: .25
+                }
+            },
+            {
+                title: "ribbon_cable_fatigue_fixture",
+                id: "ribbon_cable_fatigue_fixture",
+                group: "professional",
+                modelURL: "/projects/ribbon_cable_fatigue_fixture/ribbon_cable_fatigue_fixture.glb",
+                descriptionURL: "/projects/ribbon_cable_fatigue_fixture/desc.html",
+                imagesURL: "/projects/ribbon_cable_fatigue_fixture/images.html",
+                ipProtected: true,
+                scale: {
+                    x: .3, y: .3, z: .3
+                }
+            },
+            {
                 title: "water_screw",
                 id: "water_screw",
                 group: "classwork",

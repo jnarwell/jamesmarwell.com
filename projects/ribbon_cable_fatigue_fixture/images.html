@@ -1,0 +1,46 @@
+<div style="width: 100%; height: 100%;">
+    <style>
+        .image-gallery {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .image-holder {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            flex-grow: 1;
+        }
+
+        .image-holder > img {
+            max-height: 100%;
+            object-fit: cover;
+            vertical-align: bottom;
+            max-height: 275px;
+        }
+
+        li:last-child {
+            flex-grow: 10;
+        }
+    </style>
+    <div class="image-gallery">
+        <div class="image-holder">
+            <img src="./projects/ribbon_cable_fatigue_fixture/images/test_setup.png">
+            <p>complete test setup</p>
+        </div>
+        <div class="image-holder">
+            <img src="./projects/ribbon_cable_fatigue_fixture/images/3d_brackets.png">
+            <p>3D printed brackets</p>
+        </div>
+        <div class="image-holder">
+            <img src="./projects/ribbon_cable_fatigue_fixture/images/bend_radius_20mm.png">
+            <p>20mm bend radius test</p>
+        </div>
+        <div class="image-holder">
+            <img src="./projects/ribbon_cable_fatigue_fixture/images/test_results.png">
+            <p>fatigue test results</p>
+        </div>
+    </div>
+</div>
